@@ -17,18 +17,6 @@ hackson-Ctrl-Create/
 ```
 ---
 
-## 專案目錄結構
-
-```text
-hackson-Ctrl-Create/
-├── frontend/          # 前端程式碼（React + Vite）
-├── backend/           # 後端程式碼（Python + FastAPI）
-├── .gitignore         # Git 忽略設定檔
-└── README.md          # 專案協作手冊（本檔案）
-```
-
----
-
 ## 團隊須知
 
 ### 1. 核心開發守則
