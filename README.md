@@ -56,6 +56,8 @@ hackson-Ctrl-Create/
    * 簡述修改內容，確認無衝突後合併進 `main`。
    * 合併後可直接刪除 GitHub 上的舊分支。
 
+## Git 初學者新手村
+
 > [!IMPORTANT]
 > 如果從未用過 Git，請依序完成以下步驟：
 
