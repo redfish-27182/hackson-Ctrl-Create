@@ -2,7 +2,7 @@
 
 梅竹黑客松專案倉庫。
 
-隊名: Ctrl & Create 隊
+Ctrl & Create 隊
 
 ---
 
@@ -13,7 +13,7 @@ hackson-Ctrl-Create/
 ├── frontend/          # 前端程式碼
 ├── backend/           # 後端程式碼
 ├── .gitignore         # Git 設定
-└── README.md          # 專案說明文件（本檔案）
+└── README.md          # 專案說明文件
 ```
 ---
 
