@@ -31,7 +31,7 @@ hackson-Ctrl-Create/
 
 ---
 
-## 標準開發工作流程（SOP）
+## 開發流程（SOP）
 
 1. **同步最新主分支並開新分支**：
    ```bash
@@ -55,3 +55,25 @@ hackson-Ctrl-Create/
    * 前往 GitHub 倉庫點選 **Compare & pull request**。
    * 簡述修改內容，確認無衝突後合併進 `main`。
    * 合併後可直接刪除 GitHub 上的舊分支。
+
+> [!IMPORTANT]
+> 如果從未用過 Git，請依序完成以下步驟：
+
+### 1. 安裝 Git
+* **Windows**：前往 [git-scm.com](https://git-scm.com/) 下載安裝檔，安裝過程一路按「Next」預設值到底即可。
+* **Mac**：開啟「終端機（Terminal）」，輸入 `git --version`，系統會自動跳出提示引導安裝 Command Line Tools。
+
+### 2. 第一次使用需設定身分（僅需執行一次）
+安裝後打開 VS Code 的終端機（或 Git Bash），輸入：
+```bash
+git config --global user.name "你的GitHub暱稱"
+git config --global user.email "你的GitHub信箱"
+```
+
+### 3. 下載專案到自己電腦（Clone）
+找好你想放專案的資料夾，打開終端機執行：
+```bash
+git clone [https://github.com/redfish-27182/hackson-Ctrl-Create.git](https://github.com/redfish-27182/hackson-Ctrl-Create.git)
+cd hackson-Ctrl-Create
+```
+下載完成後，用 VS Code 打開這個資料夾，照著上方的「開發流程（SOP）」開始寫扣即可。
