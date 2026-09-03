@@ -4,5 +4,5 @@ def main():
     print("請在這裡添加您的程式碼邏輯。")
     print("程式執行完畢。")
     print("哈哈哈哈哈~~")
-
+    print("哈哈哈哈哈囉")
 main()
