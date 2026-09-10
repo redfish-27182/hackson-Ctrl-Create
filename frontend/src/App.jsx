@@ -1,80 +1,42 @@
-import React, { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import TopNavigation from './components/TopNavigation';
+import HeroCarousel from './components/HeroCarousel';
+import SearchPage from './components/searchPage';
+
+function HomePage() {
+  return (
+    <main>
+      <HeroCarousel />
+      <section className="service-intro" aria-labelledby="service-heading">
+        <p className="eyebrow">DIGITAL PUBLIC SERVICE</p>
+        <h1 id="service-heading">貼近生活的數位案件服務</h1>
+        <p>從申辦、查詢到通知，讓每一個步驟都更簡單、更安心。</p>
+      </section>
+    </main>
+  );
+}
+
+function InformationPage() {
+  return (
+    <main className="simple-page">
+      <p className="eyebrow">SERVICE CENTER</p>
+      <h1>服務資訊</h1>
+      <p>請由上方選單選擇您需要的案件或便民服務。</p>
+    </main>
+  );
+}
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [result, setResult] = useState(null);
-
-  const handleSearch = () => {
-    if (!searchTerm.trim()) {
-      alert('請先輸入名字');
-      return;
-    }
-
-    const randomCode = `MZ-${Math.floor(1000 + Math.random() * 9000)}`;
-    const randomPercentage = Math.floor(Math.random() * 101);
-    const statusOptions = ['審核中', '已完成'];
-    const randomStatus =
-      statusOptions[Math.floor(Math.random() * statusOptions.length)];
-
-    setResult({
-      name: searchTerm,
-      code: randomCode,
-      percentage: randomPercentage,
-      status: randomStatus,
-    });
-  };
-
   return (
-    <div className="container">
-      <h1 className="title">進度查詢系統</h1>
-
-      <div className="search-bar">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="請輸入姓名..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-        />
-        <button className="search-button" onClick={handleSearch}>
-          搜尋
-        </button>
-      </div>
-
-      {result && (
-        <div className="result-card">
-          <h2>查詢結果</h2>
-          <div className="result-item">
-            <span className="label">查詢姓名：</span>
-            <span className="value">{result.name}</span>
-          </div>
-          <div className="result-item">
-            <span className="label">案件代號：</span>
-            <span className="value">{result.code}</span>
-          </div>
-          <div className="result-item">
-            <span className="label">當前狀態：</span>
-            <span className={`status-badge status-${result.status}`}>
-              {result.status}
-            </span>
-          </div>
-          <div className="result-item">
-            <span className="label">處理進度：</span>
-            <div className="progress-wrapper">
-              <div className="progress-bar-bg">
-                <div
-                  className="progress-bar-fill"
-                  style={{ width: `${result.percentage}%` }}
-                />
-              </div>
-              <span className="progress-text">{result.percentage}%</span>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    <BrowserRouter>
+      <TopNavigation />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/case-progress" element={<SearchPage />} />
+        <Route path="*" element={<InformationPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
