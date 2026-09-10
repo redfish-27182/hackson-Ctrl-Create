@@ -55,8 +55,8 @@ function HeroCarousel() {
             el: '.carousel-dots',
           }}
           breakpoints={{
-            0: { slidesPerView: 1.19, spaceBetween: 12 },
-            601: { slidesPerView: 1.42, spaceBetween: 20 },
+            0: { slidesPerView: 1, spaceBetween: 0 },
+            768: { slidesPerView: 1.42, spaceBetween: 20 },
             901: { slidesPerView: 1.66, spaceBetween: 20 },
           }}
         >

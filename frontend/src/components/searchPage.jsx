@@ -25,7 +25,7 @@ function SearchPage() {
 };
 
     return (
-    <main className="search-page">
+    <div className="container">
         <h1 className="title">進度查詢系統</h1>
 
         <div className="search-bar">
@@ -73,7 +73,7 @@ function SearchPage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

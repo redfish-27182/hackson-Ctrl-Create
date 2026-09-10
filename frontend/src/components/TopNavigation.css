@@ -178,13 +178,27 @@
   }
 }
 
+@media (max-width: 767px) {
+  .nav-shell {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    min-height: 96px;
+    padding: 16px 24px;
+  }
+
+  .main-nav {
+    display: none;
+  }
+}
+
 @media (max-width: 620px) {
   .site-header {
     margin: 0;
   }
 
   .utility-inner {
-    padding: 0 ;
+    padding: 0 20px;
   }
 
   .utility-inner > span {
@@ -198,7 +212,7 @@
   }
 
   .nav-shell {
-    padding: 20px;
+    padding: 14px 20px;
   }
 
   .brand-copy {
