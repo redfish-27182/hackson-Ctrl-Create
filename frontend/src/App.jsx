@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import TopNavigation from './components/TopNavigation';
 import HeroCarousel from './components/HeroCarousel';
 import SearchPage from './components/searchPage';
+import AIButton from './components/AIButton';
+import AIChatModal from './components/AIChatModal';
 
 function HomePage() {
   return (
@@ -28,6 +31,8 @@ function InformationPage() {
 }
 
 function App() {
+  const [isAiChatOpen, setIsAiChatOpen] = useState(false);
+
   return (
     <BrowserRouter>
       <TopNavigation />
@@ -36,6 +41,14 @@ function App() {
         <Route path="/case-progress" element={<SearchPage />} />
         <Route path="*" element={<InformationPage />} />
       </Routes>
+      <AIButton 
+        isOpen={isAiChatOpen} 
+        onClick={() => setIsAiChatOpen(true)} 
+        />
+      <AIChatModal 
+        isOpen={isAiChatOpen} 
+        onClose={() => setIsAiChatOpen(false)}
+     />
     </BrowserRouter>
   );
 }

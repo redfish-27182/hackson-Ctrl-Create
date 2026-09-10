@@ -40,7 +40,7 @@ function SearchPage() {
         <button className="search-button" onClick={handleSearch}>
             搜尋
         </button>
-      </div>
+    </div>
 
       {result && (
         <div className="result-card">
