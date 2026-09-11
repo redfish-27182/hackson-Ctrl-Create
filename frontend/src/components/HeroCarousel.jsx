@@ -62,12 +62,12 @@ function HeroCarousel() {
         >
           {slides.map((slide) => (
             <SwiperSlide
-              className="slide"
-              key={slide.title}
-              style={{ '--slide-image': `url(${slide.image})` }}
+                className="slide"
+                key={slide.title}
+                style={{ '--slide-image': `url(${slide.image})` }}
             >
-              <div className="slide-shade" />
-              <div className="slide-content">
+            <div className="slide-shade" />
+            <div className="slide-content">
                 <p>{slide.tag}</p>
                 <h2>{slide.title}</h2>
                 <span>{slide.subtitle}</span>

@@ -1,3 +1,4 @@
+/* 網站頁首：包含工具列、品牌識別與主導覽。 */
 .site-header {
   background: var(--ink);
   margin: 10px 16px 0;
@@ -5,6 +6,7 @@
   z-index: 5;
 }
 
+/* 最上方的輔助連結列。 */
 .utility-bar {
   height: 34px;
   background: var(--soft-gray);
@@ -45,6 +47,7 @@
   background: rgba(255, 255, 255, 0.8);
 }
 
+/* 品牌與主導覽的主要排版容器。 */
 .nav-shell {
   display: flex;
   align-items: center;
@@ -56,6 +59,7 @@
   border-radius: 0 0 14px 14px;
 }
 
+/* 品牌標誌與文字說明。 */
 .brand {
   display: flex;
   align-items: center;
@@ -94,6 +98,7 @@
   letter-spacing: 0.04em;
 }
 
+/* 主導覽與 hover／鍵盤可操作的下拉選單。 */
 .main-nav {
   display: flex;
   align-items: center;
@@ -126,6 +131,7 @@
   line-height: 0.7;
 }
 
+/* 預設隱藏下拉面板，父層互動時才顯示。 */
 .dropdown-panel {
   position: absolute;
   top: calc(100% + 8px);
@@ -165,6 +171,7 @@
   color: #111;
 }
 
+/* 平板版將導覽移至品牌下方。 */
 @media (max-width: 960px) {
   .nav-shell {
     flex-direction: column;
@@ -178,6 +185,7 @@
   }
 }
 
+/* 小螢幕隱藏主導覽，只保留精簡頁首。 */
 @media (max-width: 767px) {
   .nav-shell {
     flex-direction: row;
@@ -192,6 +200,7 @@
   }
 }
 
+/* 手機版縮減工具列與品牌文字占用空間。 */
 @media (max-width: 620px) {
   .site-header {
     margin: 0;

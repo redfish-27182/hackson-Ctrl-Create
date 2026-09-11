@@ -1,11 +1,14 @@
+/* 首頁主視覺輪播的外層與標題列。 */
 .hero { background: var(--ink); overflow: hidden; padding: 16px 0 0; }
 .carousel-head { display: flex; align-items: baseline; justify-content: space-between; max-width: 1180px; margin: 0 auto 20px; padding: 0 40px; }
 .carousel-head p { margin: 0; color: var(--signal-yellow); font-size: .72rem; font-weight: 700; letter-spacing: .16em; }
 .carousel-head span { color: #b8bdbf; font-size: .75rem; letter-spacing: .12em; }
+/* 輪播容器與投影片：以 CSS 變數帶入每張背景圖。 */
 .carousel-frame { position: relative; }
 .carousel-track { overflow: visible; }
 .slide { aspect-ratio: 1.77 / 1; min-width: 0; overflow: hidden; position: relative; background-image: var(--slide-image); background-position: center; background-size: cover; border-radius: 3px; transition: opacity .3s ease, transform .3s ease; }
 .slide:not(.swiper-slide-active) { opacity: .6; transform: scale(.97); }
+/* 漸層遮罩提高圖片上文字的可讀性。 */
 .slide-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .82), rgba(0, 0, 0, .2) 68%), linear-gradient(0deg, rgba(3, 3, 3, .55), transparent 55%); }
 .slide-content { position: absolute; bottom: 0; left: 0; padding: 34px 38px; text-align: left; }
 .slide-content p { margin: 0 0 12px; color: var(--signal-yellow); font-size: .72rem; font-weight: 700; letter-spacing: .12em; }
@@ -13,9 +16,11 @@
 .slide-content span { display: block; margin-bottom: 22px; color: #f0f0ed; font-size: .98rem; line-height: 1.6; }
 .slide-content a { padding-bottom: 5px; border-bottom: 1px solid var(--signal-yellow); color: var(--signal-yellow); font-size: .88rem; }
 .slide-content b { margin-left: 12px; font-size: 1.2rem; }
+/* 左右切換按鈕與 Swiper 分頁圓點。 */
 .carousel-arrow { position: absolute; top: 50%; z-index: 2; width: 64px; height: 64px; border: 0; border-radius: 50%; background: rgba(20, 24, 27, .75); color: #fff; cursor: pointer; font-size: 3.7rem; line-height: .7; transform: translateY(-50%); transition: background-color .2s ease, color .2s ease; }
 .carousel-arrow:hover { background: var(--signal-yellow); color: #111; }.prev { left: 10%; }.next { right: 10%; }
 .carousel-dots { display: flex; justify-content: center; gap: 13px; padding: 28px 0 6px; }
 .carousel-dots .swiper-pagination-bullet { width: 10px; height: 10px; margin: 0 !important; background: #8b969a; opacity: 1; transition: background-color .2s ease, transform .2s ease; }
 .carousel-dots .swiper-pagination-bullet-active { background: var(--signal-yellow); transform: scale(1.2); }
+/* 手機版壓縮內距與箭頭尺寸，避免遮住主視覺內容。 */
 @media (max-width: 600px) { .carousel-head { padding: 0 24px; }.slide-content { padding: 22px 24px; }.slide-content span { margin-bottom: 14px; font-size: .85rem; }.carousel-arrow { width: 48px; height: 48px; font-size: 2.7rem; }.prev { left: 5%; }.next { right: 5%; } }

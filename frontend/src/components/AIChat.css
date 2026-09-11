@@ -1,188 +1,377 @@
+/* 右下角浮動按鈕：用來開啟 AI 對話視窗。 */
 .ai-fab {
-  position: fixed;
-  right: 30px;
-  bottom: 28px;
-  z-index: 31;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 56px;
-  padding: 8px 19px 8px 9px;
-  border: 1px solid rgba(255, 255, 255, .65);
-  border-radius: 999px;
-  background: var(--signal-yellow);
-  color: #0c0d0d;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, .38), 0 0 0 5px rgba(255, 242, 45, .12);
-  cursor: pointer;
-  font-weight: 700;
-  letter-spacing: .07em;
-  transition: transform .24s ease, box-shadow .24s ease, opacity .24s ease;
+    position: fixed;
+    right: 30px;
+    bottom: 28px;
+    z-index: 31;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 56px;
+    padding: 8px 19px 8px 9px;
+    border: 1px solid rgba(255, 255, 255, .65);
+    border-radius: 999px;
+    background: var(--signal-yellow);
+    color: #0c0d0d;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .38), 0 0 0 5px rgba(255, 242, 45, .12);
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: .07em;
+    transition: transform .24s ease, box-shadow .24s ease, opacity .24s ease;
 }
 
-.ai-fab:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0, 0, 0, .44), 0 0 0 8px rgba(255, 242, 45, .16); }
+.ai-fab:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, .44), 0 0 0 8px rgba(255, 242, 45, .16);
+}
 
+/* 鍵盤操作時提供一致且清楚的焦點提示。 */
 .ai-fab:focus-visible,
 .ai-header-actions button:focus-visible,
 .ai-quick-prompts button:focus-visible,
 .ai-input-footer input:focus-visible,
-.ai-input-footer button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.ai-input-footer button:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
 
-.ai-fab.is-open { opacity: 0; pointer-events: none; transform: scale(.82); }
-.ai-fab-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #111; color: var(--signal-yellow); }
-.ai-fab-icon svg { width: 23px; height: 23px; }
+.ai-fab.is-open {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(.82);
+}
 
-.ai-chat-layer { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
-.ai-chat-layer.is-open { pointer-events: auto; }
-.ai-chat-backdrop { position: absolute; inset: 0; width: 100%; border: 0; background: rgba(4, 5, 5, .48); cursor: default; opacity: 0; transition: opacity .38s ease; }
-.ai-chat-layer.is-open .ai-chat-backdrop { opacity: 1; }
+.ai-fab-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #111;
+    color: var(--signal-yellow);
+}
 
+.ai-fab-icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+/* 全螢幕對話層；未開啟時不攔截底層頁面的點擊。 */
+.ai-chat-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+}
+
+.ai-chat-layer.is-open {
+    pointer-events: auto;
+}
+
+/* 半透明遮罩以聚焦對話內容。 */
+.ai-chat-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: 0;
+    background: rgba(4, 5, 5, .48);
+    cursor: default;
+    opacity: 0;
+    transition: opacity .38s ease;
+}
+
+.ai-chat-layer.is-open .ai-chat-backdrop {
+    opacity: 1;
+}
+
+/* 對話視窗從浮動按鈕所在的右下角縮放展開。 */
 .ai-chat-modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  width: min(520px, calc(100vw - 48px));
-  height: min(620px, calc(100vh - 96px));
-  overflow: hidden;
-  border: 1px solid rgba(255, 242, 45, .76);
-  border-radius: 18px;
-  background: linear-gradient(145deg, #202529 0%, #111416 57%, #090a0b 100%);
-  color: var(--paper);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, .56);
-  opacity: 0;
-  transform: translate(calc(-50% + min(50vw - 30px, 230px)), calc(-50% + min(50vh - 28px, 282px))) scale(.12);
-  transform-origin: 100% 100%;
-  transition: transform .52s cubic-bezier(.2, .82, .22, 1), opacity .24s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    width: min(520px, calc(100vw - 48px));
+    height: min(620px, calc(100vh - 96px));
+    overflow: hidden;
+    border: 1px solid rgba(255, 242, 45, .76);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #202529 0%, #111416 57%, #090a0b 100%);
+    color: var(--paper);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, .56);
+    opacity: 0;
+    transform: translate(calc(-50% + min(50vw - 30px, 230px)), calc(-50% + min(50vh - 28px, 282px))) scale(.12);
+    transform-origin: 100% 100%;
+    transition: transform .52s cubic-bezier(.2, .82, .22, 1), opacity .24s ease;
 }
 
-.ai-chat-layer.is-open .ai-chat-modal { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.ai-chat-layer.is-open .ai-chat-modal {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
 
+/* 視窗標頭與控制按鈕。 */
 .ai-chat-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 22px 23px 19px;
-  border-bottom: 1px solid rgba(255, 255, 255, .13);
-  background: rgba(255, 255, 255, .025);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 23px 19px;
+    border-bottom: 1px solid rgba(255, 255, 255, .13);
+    background: rgba(255, 255, 255, .025);
 }
 
-.ai-chat-header > div:first-child { position: relative; padding-left: 16px; }
-.ai-status-dot { position: absolute; top: 5px; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--signal-yellow); box-shadow: 0 0 9px var(--signal-yellow); }
-.ai-chat-header p { margin: 0 0 4px; color: #bdc3c5; font-size: .73rem; letter-spacing: .1em; }
-.ai-chat-header h2 { margin: 0; font-size: 1.35rem; font-weight: 600; letter-spacing: .08em; }
-.ai-header-actions { display: flex; gap: 7px; }
+.ai-chat-header>div:first-child {
+    position: relative;
+    padding-left: 16px;
+}
+
+.ai-status-dot {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--signal-yellow);
+    box-shadow: 0 0 9px var(--signal-yellow);
+}
+
+.ai-chat-header p {
+    margin: 0 0 4px;
+    color: #bdc3c5;
+    font-size: .73rem;
+    letter-spacing: .1em;
+}
+
+.ai-chat-header h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+}
+
+.ai-header-actions {
+    display: flex;
+    gap: 7px;
+}
 
 .ai-header-actions button {
-  display: grid;
-  place-items: center;
-  width: 31px;
-  height: 31px;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, .23);
-  border-radius: 7px;
-  background: transparent;
-  color: #e6e8e7;
-  cursor: pointer;
-  font-size: 1.35rem;
-  line-height: 1;
-  transition: background .2s ease, color .2s ease;
+    display: grid;
+    place-items: center;
+    width: 31px;
+    height: 31px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, .23);
+    border-radius: 7px;
+    background: transparent;
+    color: #e6e8e7;
+    cursor: pointer;
+    font-size: 1.35rem;
+    line-height: 1;
+    transition: background .2s ease, color .2s ease;
 }
 
-.ai-header-actions button:hover { background: var(--signal-yellow); color: #111; }
-.ai-chat-body { flex: 1; min-height: 0; overflow-y: auto; padding: 25px 23px; }
-.ai-welcome-message { display: flex; gap: 13px; max-width: 408px; }
-.ai-message-mark { flex: 0 0 auto; display: grid; place-items: center; width: 33px; height: 33px; border-radius: 8px; background: var(--signal-yellow); color: #111; font-size: .72rem; font-weight: 800; letter-spacing: -.04em; }
-.ai-welcome-message div { padding: 14px 15px; border-radius: 3px 14px 14px; background: rgba(255, 255, 255, .09); color: #e6e8e7; font-size: .94rem; line-height: 1.7; }
-.ai-welcome-message p { margin: 0; }
-.ai-welcome-message p + p { margin-top: 7px; color: #c5caca; }
-.ai-quick-prompts { display: flex; flex-wrap: wrap; gap: 9px; margin: 22px 0 0 46px; }
+.ai-header-actions button:hover {
+    background: var(--signal-yellow);
+    color: #111;
+}
+
+/* 可捲動的訊息內容區，保留標頭與輸入列高度。 */
+.ai-chat-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 25px 23px;
+}
+
+/* 初始歡迎訊息與快速提問選項。 */
+.ai-welcome-message {
+    display: flex;
+    gap: 13px;
+    max-width: 408px;
+}
+
+.ai-message-mark {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 33px;
+    height: 33px;
+    border-radius: 8px;
+    background: var(--signal-yellow);
+    color: #111;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: -.04em;
+}
+
+.ai-welcome-message div {
+    padding: 14px 15px;
+    border-radius: 3px 14px 14px;
+    background: rgba(255, 255, 255, .09);
+    color: #e6e8e7;
+    font-size: .94rem;
+    line-height: 1.7;
+}
+
+.ai-welcome-message p {
+    margin: 0;
+}
+
+.ai-welcome-message p+p {
+    margin-top: 7px;
+    color: #c5caca;
+}
+
+.ai-quick-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin: 22px 0 0 46px;
+}
 
 .ai-quick-prompts button {
-  padding: 8px 12px;
-  border: 1px solid rgba(255, 242, 45, .65);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--signal-yellow);
-  cursor: pointer;
-  font-size: .82rem;
-  letter-spacing: .03em;
-  transition: background .2s ease, color .2s ease;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 242, 45, .65);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--signal-yellow);
+    cursor: pointer;
+    font-size: .82rem;
+    letter-spacing: .03em;
+    transition: background .2s ease, color .2s ease;
 }
 
-.ai-quick-prompts button:hover { background: var(--signal-yellow); color: #111; }
+.ai-quick-prompts button:hover {
+    background: var(--signal-yellow);
+    color: #111;
+}
 
+/* 固定在視窗底部的提問輸入列。 */
 .ai-input-footer {
-  display: flex;
-  gap: 10px;
-  padding: 16px 18px;
-  border-top: 1px solid rgba(255, 255, 255, .13);
-  background: rgba(0, 0, 0, .16);
+    display: flex;
+    gap: 10px;
+    padding: 16px 18px;
+    border-top: 1px solid rgba(255, 255, 255, .13);
+    background: rgba(0, 0, 0, .16);
 }
 
 .ai-input-footer input {
-  min-width: 0;
-  flex: 1;
-  height: 47px;
-  padding: 0 14px;
-  border: 1px solid rgba(255, 255, 255, .27);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, .07);
-  color: var(--paper);
-  font: inherit;
-  font-size: .92rem;
+    min-width: 0;
+    flex: 1;
+    height: 47px;
+    padding: 0 14px;
+    border: 1px solid rgba(255, 255, 255, .27);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .07);
+    color: var(--paper);
+    font: inherit;
+    font-size: .92rem;
 }
 
-.ai-input-footer input::placeholder { color: #9da5a7; }
-.ai-input-footer input:focus { border-color: var(--signal-yellow); }
+.ai-input-footer input::placeholder {
+    color: #9da5a7;
+}
+
+.ai-input-footer input:focus {
+    border-color: var(--signal-yellow);
+}
 
 .ai-input-footer button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-width: 88px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--signal-yellow);
-  color: #111;
-  cursor: pointer;
-  font: inherit;
-  font-size: .9rem;
-  font-weight: 700;
-  transition: transform .2s ease, opacity .2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 88px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--signal-yellow);
+    color: #111;
+    cursor: pointer;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 700;
+    transition: transform .2s ease, opacity .2s ease;
 }
 
-.ai-input-footer button:hover:not(:disabled) { transform: translateY(-2px); }
-.ai-input-footer button:disabled { cursor: not-allowed; opacity: .45; }
-.ai-input-footer button svg { width: 17px; height: 17px; }
+.ai-input-footer button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
 
+.ai-input-footer button:disabled {
+    cursor: not-allowed;
+    opacity: .45;
+}
+
+.ai-input-footer button svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* 僅供螢幕閱讀器讀取的文字。 */
 .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
+/* 手機版：縮小視窗並優先保留輸入操作空間。 */
 @media (max-width: 600px) {
-  .ai-fab { right: 18px; bottom: 18px; min-height: 52px; padding-right: 16px; }
-  .ai-fab-icon { width: 35px; height: 35px; }
-  .ai-chat-modal { width: calc(100vw - 28px); height: min(620px, calc(100vh - 40px)); border-radius: 15px; }
-  .ai-chat-header { padding: 19px 17px 16px; }
-  .ai-chat-body { padding: 20px 17px; }
-  .ai-input-footer { padding: 13px; }
-  .ai-input-footer button { min-width: 50px; }
-  .ai-input-footer button span { display: none; }
-  .ai-quick-prompts { margin-left: 0; }
+    .ai-fab {
+        right: 18px;
+        bottom: 18px;
+        min-height: 52px;
+        padding-right: 16px;
+    }
+
+    .ai-fab-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .ai-chat-modal {
+        width: calc(100vw - 28px);
+        height: min(620px, calc(100vh - 40px));
+        border-radius: 15px;
+    }
+
+    .ai-chat-header {
+        padding: 19px 17px 16px;
+    }
+
+    .ai-chat-body {
+        padding: 20px 17px;
+    }
+
+    .ai-input-footer {
+        padding: 13px;
+    }
+
+    .ai-input-footer button {
+        min-width: 50px;
+    }
+
+    .ai-input-footer button span {
+        display: none;
+    }
+
+    .ai-quick-prompts {
+        margin-left: 0;
+    }
 }
 
+/* 使用者偏好減少動態效果時，幾乎停用過場動畫。 */
 @media (prefers-reduced-motion: reduce) {
-  .ai-fab,
-  .ai-chat-backdrop,
-  .ai-chat-modal { transition-duration: .01ms; }
+
+    .ai-fab,
+    .ai-chat-backdrop,
+    .ai-chat-modal {
+        transition-duration: .01ms;
+    }
 }

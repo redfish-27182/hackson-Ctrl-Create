@@ -1,4 +1,5 @@
 
+/* 搜尋頁面主容器：垂直置中並限制內容寬度。 */
 .search-page {
   display: flex;
   flex-direction: column;
@@ -9,6 +10,7 @@
   padding: 64px 0 88px;
 }
 
+/* 頁面標題與搜尋輸入區。 */
 .title {
   margin: 0 0 30px;
   color: var(--paper);
@@ -64,6 +66,7 @@
   color: var(--signal-yellow);
 }
 
+/* 查詢結果卡片與各欄位列。 */
 .result-card {
   display: grid;
   gap: 2px;
@@ -108,6 +111,7 @@
   font-weight: 700;
 }
 
+/* 進度條：背景軌道、動態填滿區與百分比文字。 */
 .progress-wrapper {
   display: flex;
   flex: 1;
@@ -135,6 +139,7 @@
   text-align: right;
 }
 
+/* 手機版將搜尋按鈕與結果欄位改為直向排列。 */
 @media (max-width: 600px) {
   .search-page {
     width: min(100% - 32px, 620px);
