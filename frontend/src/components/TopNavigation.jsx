@@ -8,6 +8,7 @@ const menus = [
 ];
 
 const caseProgressItem = '案件進度查詢';
+const faqItem = '常見申辦問答 (FAQ)';
 
 function TopNavigation() {
     return (
@@ -60,6 +61,8 @@ function TopNavigation() {
                                         to={
                                             item === caseProgressItem
                                                 ? '/case-progress'
+                                                : item === faqItem
+                                                    ? '/faq'
                                                 : `/${encodeURIComponent(item)}`
                                         }
                                     >

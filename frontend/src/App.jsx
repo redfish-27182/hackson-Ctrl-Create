@@ -4,6 +4,7 @@ import './App.css';
 import TopNavigation from './components/TopNavigation';
 import HeroCarousel from './components/HeroCarousel';
 import SearchPage from './components/searchPage';
+import FAQPage from './components/FAQPage';
 import AIButton from './components/AIButton';
 import AIChatModal from './components/AIChatModal';
 
@@ -42,6 +43,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/case-progress" element={<SearchPage />} />
+                <Route path="/faq" element={<FAQPage />} />
                 <Route path="*" element={<InformationPage />} />
             </Routes>
             <AIButton
