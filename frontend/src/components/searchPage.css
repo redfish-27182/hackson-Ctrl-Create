@@ -66,6 +66,17 @@
   color: var(--signal-yellow);
 }
 
+.search-button:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+.search-error {
+  margin: 14px 0 0;
+  color: #ff9b9b;
+  font-size: .9rem;
+}
+
 /* 查詢結果卡片與各欄位列。 */
 .result-card {
   display: grid;

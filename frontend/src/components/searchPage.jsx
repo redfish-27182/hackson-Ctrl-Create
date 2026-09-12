@@ -1,31 +1,61 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { BACKEND_URL } from '../App';
 import './searchPage.css';
 
 function SearchPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [result, setResult] = useState(null);
-    const handleSearch = () => {
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSearch = async () => {
         if (!searchTerm.trim()) {
-            alert('請先輸入名字');
+            setErrorMessage('請先輸入名字');
+            setResult(null);
             return;
         }
 
-        const randomCode = `MZ-${Math.floor(1000 + Math.random() * 9000)}`;
-        const randomPercentage = Math.floor(Math.random() * 101);
-        const statusOptions = ['審核中', '已完成'];
-        const randomStatus =
+        setIsLoading(true);
+        setErrorMessage('');
+        setResult(null);
+
+        try {
+            const response = await axios.get(`${BACKEND_URL}/applications`, {
+                params: { name: searchTerm.trim() },
+            });
+
+            const { name, ID } = response.data;
+
+            if (!name || !ID) {
+                throw new Error('後端回傳資料格式不正確');
+            }
+
+            // 狀態與進度依需求維持前端虛擬資料。
+            const randomPercentage = Math.floor(Math.random() * 101);
+            const statusOptions = ['審核中', '已完成'];
+            const randomStatus =
             statusOptions[Math.floor(Math.random() * statusOptions.length)];
 
-        setResult({
-            name: searchTerm,
-            code: randomCode,
-            percentage: randomPercentage,
-            status: randomStatus,
-        });
+            setResult({
+                name,
+                code: ID,
+                percentage: randomPercentage,
+                status: randomStatus,
+            });
+        } catch (error) {
+            setErrorMessage(
+                error.response?.status === 404
+                    ? '找不到此姓名的案件資料'
+                    : error.message || '目前無法取得案件資料，請稍後再試。',
+            );
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
-        <div className="container">
+        <main className="search-page">
             <h1 className="title">進度查詢系統</h1>
 
             <div className="search-bar">
@@ -37,10 +67,12 @@ function SearchPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
-                <button className="search-button" onClick={handleSearch}>
-                    搜尋
+                <button className="search-button" onClick={handleSearch} disabled={isLoading}>
+                    {isLoading ? '查詢中…' : '搜尋'}
                 </button>
             </div>
+
+            {errorMessage && <p className="search-error" role="alert">{errorMessage}</p>}
 
             {result && (
                 <div className="result-card">
@@ -73,7 +105,7 @@ function SearchPage() {
                     </div>
                 </div>
             )}
-        </div>
+        </main>
     );
 }
 

@@ -8,6 +8,10 @@ import FAQPage from './components/FAQPage';
 import AIButton from './components/AIButton';
 import AIChatModal from './components/AIChatModal';
 
+// 同一個 Wi-Fi 的裝置開啟前端時，會以目前網址的主機 IP 連至後端。
+// 若後端改用其他 IP 或連接埠，只需修改此處。
+export const BACKEND_URL = `http://192.168.101.56:5000`;
+
 // HomePage component: 顯示首頁內容，包括 HeroCarousel 和服務介紹
 function HomePage() {
     return (
