@@ -1,0 +1,100 @@
+.hero {
+    overflow: hidden;
+    padding: 16px 0 0;
+    background: var(--ink);
+}
+
+.carousel-frame {
+    position: relative;
+}
+
+.carousel-track {
+    overflow: visible;
+}
+
+.slide {
+    display: grid;
+    min-width: 0;
+    aspect-ratio: 1.77 / 1;
+    overflow: hidden;
+    place-items: center;
+    background: #111111;
+    /* 圓角 */
+    border-radius: 10px;
+    transition: opacity .3s ease, transform .3s ease;
+}
+
+/* 當滑動到非活動的幻燈片時 */
+.slide:not(.swiper-slide-active) {
+    opacity: .6;
+    transform: scale(.97); 
+}
+
+.slide-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    width: 64px;
+    height: 64px;
+    padding: 0 0 6px;
+    border: 0;
+    border-radius: 50%;
+    place-items: center;
+    color: #fff;
+    background: rgba(20, 24, 27, .75);
+    cursor: pointer;
+    font-size: 3.7rem;
+    line-height: .7;
+    transform: translateY(-50%);
+    transition: background-color .2s ease, color .2s ease;
+}
+
+.carousel-arrow:hover,
+.carousel-arrow:focus-visible {
+    color: #111;
+    background: var(--signal-yellow);
+    outline: none;
+}
+
+.prev { left: 10%; }
+.next { right: 10%; }
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 13px;
+    padding: 28px 0 6px;
+}
+
+.carousel-dots .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    margin: 0 !important;
+    background: #8b969a;
+    opacity: 1;
+    transition: background-color .2s ease, transform .2s ease;
+}
+
+.carousel-dots .swiper-pagination-bullet-active {
+    background: var(--signal-yellow);
+    transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+    .carousel-arrow {
+        width: 48px;
+        height: 48px;
+        font-size: 2.7rem;
+    }
+
+    .prev { left: 5%; }
+    .next { right: 5%; }
+}

@@ -15,7 +15,7 @@ function TopNavigation() {
         <header className="site-header">
             <div className="utility-bar">
                 <div className="utility-inner">
-                    <span>新竹市政府資訊局</span>
+                    <span>創客交流組 Ctrl & Create 隊</span>
                     <div className="utility-links" aria-label="輔助功能">
                         <a href="#accessibility">◎</a>
                         <a href="#facebook">f</a>
@@ -72,6 +72,10 @@ function TopNavigation() {
                             </div>
                         </div>
                     ))}
+
+                    <NavLink to="/cybersecurity-game" className="nav-trigger standalone">
+                        資安遊戲
+                    </NavLink>
 
                     <NavLink 
                         to="/about" 
