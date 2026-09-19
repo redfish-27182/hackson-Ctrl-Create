@@ -133,31 +133,73 @@ function LineApp({ onHome, onFirstUserOpened, onHeartSyncOpen, onIdentityCardGui
                         const showDate = message.date !== previousDate;
                         previousDate = message.date;
                         return (
-                            <div className="line-message-group" key={message.id}>
-                                {showDate && <p className="line-message__date">{message.date}</p>}
-                                {message.revoked ? (
-                                    <div className="line-revoked"><span>周宇辰收回了一則訊息。</span><button type="button" onClick={() => setIsRevokedMessageVisible((visible) => !visible)}>查看已收回訊息</button>{isRevokedMessageVisible && <p>A17資料已補齊。</p>}</div>
-                                ) : message.link ? (
-                                    <div className="line-heart-sync-link"><b>HeartSync｜測出你們的戀愛契合度</b><button type="button" onClick={onHeartSyncOpen}>開始測驗</button></div>
-                                ) : message.id === 'z22' && selectedUser.id === 'zhou-yu-chen' ? (
-                                    <div className="line-message" data-mine={message.isMine}>
-                                        <div className="line-identity-photos">
-                                            {IDENTITY_CARD_PHOTOS.map((photo) => (
-                                                <button
-                                                    className="line-identity-photo"
-                                                    data-guide={photo.guide}
-                                                    key={photo.id}
-                                                    type="button"
-                                                    onClick={onIdentityCardGuideOpen}
-                                                >
-                                                    <Image size={18} />
-                                                    <span>{photo.label}</span>
-                                                    <small>點擊查看</small>
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <div className="line-message__meta">{message.isMine && <span>{message.read ? '已讀' : '未讀'}</span>}<time>{message.time}</time></div>
-                                    </div>
+                           <div className="line-message-group" key={message.id}>
+    {showDate && (
+        <p className="line-message__date">
+            {message.date}
+        </p>
+    )}
+
+    {message.link ? (
+        <div className="line-heart-sync-link">
+            <b>HeartSync｜測出你們的戀愛契合度</b>
+
+            <button
+                type="button"
+                onClick={onHeartSyncOpen}
+            >
+                開始測驗
+            </button>
+        </div>
+    ) : message.id === 'z22' &&
+      selectedUser.id === 'zhou-yu-chen' ? (
+        <div
+            className="line-message"
+            data-mine={message.isMine}
+        >
+            <div className="line-identity-photos">
+                {IDENTITY_CARD_PHOTOS.map((photo) => (
+                    <button
+                        className="line-identity-photo"
+                        data-guide={photo.guide}
+                        key={photo.id}
+                        type="button"
+                        onClick={onIdentityCardGuideOpen}
+                    >
+                        <Image size={18} />
+                        <span>{photo.label}</span>
+                        <small>點擊查看</small>
+                    </button>
+                ))}
+            </div>
+
+            <div className="line-message__meta">
+                {message.isMine && (
+                    <span>
+                        {message.read ? '已讀' : '未讀'}
+                    </span>
+                )}
+                <time>{message.time}</time>
+            </div>
+        </div>
+    ) : (
+        <div
+            className="line-message"
+            data-mine={message.isMine}
+        >
+            <p>{message.text}</p>
+
+            <div className="line-message__meta">
+                {message.isMine && (
+                    <span>
+                        {message.read ? '已讀' : '未讀'}
+                    </span>
+                )}
+                <time>{message.time}</time>
+            </div>
+        </div>
+    )}
+</div>
                                 ) : (
                                     <div className="line-message" data-mine={message.isMine}>
                                         <div className="line-message__bubble" data-type={message.type}>{message.text && <p>{message.text}</p>}</div>
