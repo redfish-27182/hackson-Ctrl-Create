@@ -2,123 +2,300 @@ import sqlite3
 from pathlib import Path
 
 
-DB_PATH = Path(__file__).resolve().parent / "demo.db"
+# =========================================================
+# Database 路徑
+# =========================================================
 
+BASE_DIR = Path(__file__).resolve().parent
+
+DB_PATH = BASE_DIR / "database.db"
+
+
+# =========================================================
+# 建立連線
+# =========================================================
 
 def get_connection():
-    return sqlite3.connect(DB_PATH)
 
+    conn = sqlite3.connect(DB_PATH)
+
+    conn.row_factory = sqlite3.Row
+
+    return conn
+
+
+# =========================================================
+# 初始化資料庫
+# =========================================================
 
 def init_database():
-    conn = get_connection()
-    cursor = conn.cursor()
 
-    # 建立申請資料表
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS applications (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            application_id TEXT UNIQUE NOT NULL,
-            name TEXT NOT NULL,
-            id_last4 TEXT NOT NULL,
-            birthday_roc TEXT NOT NULL,
-            status TEXT NOT NULL,
-            progress_percent INTEGER,         #新增：進度百分比 (例如 50)
-            submitted_at TEXT,               #新增：送件時間 (例如 '2026-03-01 10:00:00')
-            updated_at TEXT,                 #新增：更新時間
-            expected_completed_at TEXT       #新增：預計完成時間
+    """
+    建立 applications 資料表。
+    如果舊資料表沒有 line_user_id，
+    會自動補上。
+    """
+
+    with get_connection() as conn:
+
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS applications (
+
+                app_no TEXT PRIMARY KEY,
+
+                name TEXT NOT NULL,
+
+                id_last4 TEXT NOT NULL,
+
+                birthday_roc TEXT NOT NULL,
+
+                status TEXT NOT NULL,
+
+                line_user_id TEXT
+
+            )
+        """)
+
+        # -------------------------------------------------
+        # 相容舊版 database.db
+        # 如果原本沒有 line_user_id，自動加入
+        # -------------------------------------------------
+
+        cursor.execute("""
+            PRAGMA table_info(applications)
+        """)
+
+        columns = [
+            row["name"]
+            for row in cursor.fetchall()
+        ]
+
+        if "line_user_id" not in columns:
+
+            cursor.execute("""
+                ALTER TABLE applications
+                ADD COLUMN line_user_id TEXT
+            """)
+
+            print(
+                "[Database] 已新增 line_user_id 欄位"
+            )
+
+        conn.commit()
+
+    print(
+        "[Database] 資料庫初始化完成！"
+    )
+
+
+# =========================================================
+# Demo 資料
+# =========================================================
+
+def insert_demo_data(data_list):
+
+    """
+    批量新增 Demo 資料。
+    如果 app_no 已存在，就更新。
+    """
+
+    with get_connection() as conn:
+
+        cursor = conn.cursor()
+
+        cursor.executemany("""
+            INSERT OR REPLACE INTO applications
+            (
+                app_no,
+                name,
+                id_last4,
+                birthday_roc,
+                status
+            )
+
+            VALUES (?, ?, ?, ?, ?)
+        """, data_list)
+
+        conn.commit()
+
+        print(
+            f"[Database] 成功寫入 "
+            f"{cursor.rowcount} 筆測試資料！"
         )
-    """)
-
-    # 建立 LINE 綁定資料表
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS line_bindings (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            line_user_id TEXT UNIQUE NOT NULL,
-            application_id TEXT NOT NULL
-        )
-    """)
-
-    # =========================
-    # Demo 測試資料
-    # =========================
-        #新增狀態時間：進度百分比、送件時間、更新時間、預計完成時間
-    demo_data = [
-        ("AI20260001", "陳小明", "1234", "920517", "資料審核中","20","2026-03-01 10:00:00","2026-03-02 10:00:00","2026-03-31 10:00:00"),
-        ("AI20260002", "王小美", "5678", "900101", "核銷完成","67","2026-03-07 14:30:00","2026-03-08 14:30:00","2026-04-04 14:30:00"),
-        ("AI20260003", "陳美麗", "1357", "900110", "等待補件","30","2026-03-10 09:00:00","2026-03-11 12:00:00","2026-04-09 09:00:00"),
-        ("AI20260004", "林大偉", "2468", "890305", "等待撥款","45","2026-03-15 11:00:00","2026-03-16 11:00:00","2026-04-14 11:00:00"),
-        ("AI20260005", "張怡君", "4321", "930725", "審核完成","80","2026-03-20 10:00:00","2026-03-21 10:00:00","2026-04-19 10:00:00"),
-        ("AI20260006", "李承恩", "8765", "880912", "已完成撥款","100","2026-03-25 14:30:00","2026-03-26 14:30:00","2026-04-24 14:30:00"),
-    ]
-
-    cursor.executemany("""
-        INSERT OR IGNORE INTO applications
-        (application_id, name, id_last4, birthday_roc, status, progress_percent, submitted_at, updated_at, expected_completed_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, demo_data)
-
-    conn.commit()
-    conn.close()
 
 
-def find_application(name, id_last4, birthday_roc):
-    conn = get_connection()
-    cursor = conn.cursor()
+# =========================================================
+# 查詢所有案件
+# =========================================================
 
-    cursor.execute("""
-        SELECT application_id, name, status
-        FROM applications
-        WHERE name = ?
-        AND id_last4 = ?
-        AND birthday_roc = ?
-    """, (
-        name,
-        id_last4,
-        birthday_roc
-    ))
+def get_all_applications():
 
-    result = cursor.fetchone()
+    with get_connection() as conn:
 
-    conn.close()
+        cursor = conn.cursor()
 
-    return result
+        cursor.execute("""
+            SELECT *
+            FROM applications
+        """)
+
+        return [
+            dict(row)
+            for row in cursor.fetchall()
+        ]
 
 
-def bind_line_user(line_user_id, application_id):
-    conn = get_connection()
-    cursor = conn.cursor()
+# =========================================================
+# 帳號綁定用
+# 姓名 + 身分證末四碼 + 出生年月日
+# =========================================================
 
-    cursor.execute("""
-        INSERT OR REPLACE INTO line_bindings
-        (line_user_id, application_id)
-        VALUES (?, ?)
-    """, (
-        line_user_id,
-        application_id
-    ))
+def find_application(
+    name: str,
+    id_last4: str,
+    birthday_roc: str
+):
 
-    conn.commit()
-    conn.close()
+    with get_connection() as conn:
 
+        cursor = conn.cursor()
 
-def find_application_by_line_user(line_user_id):
-    conn = get_connection()
-    cursor = conn.cursor()
+        cursor.execute("""
+            SELECT *
+            FROM applications
 
-    cursor.execute("""
-        SELECT a.application_id, a.name, a.id_last4, a.birthday_roc,
-               a.status, a.progress_percent, a.submitted_at,
-               a.updated_at, a.expected_completed_at
-        FROM line_bindings AS b
-        JOIN applications AS a ON a.application_id = b.application_id
-        WHERE b.line_user_id = ?
-    """, (line_user_id,))
+            WHERE name = ?
+              AND id_last4 = ?
+              AND birthday_roc = ?
 
-    row = cursor.fetchone()
-    columns = [column[0] for column in cursor.description]
-    conn.close()
+            LIMIT 1
+        """, (
+            name,
+            id_last4,
+            birthday_roc
+        ))
 
-    if row is None:
+        row = cursor.fetchone()
+
+        if row:
+            return dict(row)
+
         return None
 
-    return dict(zip(columns, row))
+
+# =========================================================
+# LINE 帳號綁定
+# =========================================================
+
+def bind_line_user(
+    line_user_id: str,
+    application_id: str
+):
+
+    with get_connection() as conn:
+
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE applications
+
+            SET line_user_id = ?
+
+            WHERE app_no = ?
+        """, (
+            line_user_id,
+            application_id
+        ))
+
+        conn.commit()
+
+        success = (
+            cursor.rowcount > 0
+        )
+
+    if success:
+
+        print(
+            "[Database] LINE 綁定完成："
+            f"{application_id}"
+        )
+
+    else:
+
+        print(
+            "[Database] 找不到案件："
+            f"{application_id}"
+        )
+
+    return success
+
+
+# =========================================================
+# 依姓名查詢案件
+# 給前端 /applications API 使用
+# =========================================================
+
+def find_application_by_name(
+    name: str
+):
+
+    with get_connection() as conn:
+
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT *
+            FROM applications
+
+            WHERE name = ?
+
+            LIMIT 1
+        """, (
+            name,
+        ))
+
+        row = cursor.fetchone()
+
+        if not row:
+            return None
+
+        # 配合目前 main.py 的寫法：
+        #
+        # application_id = application[0]
+        # applicant_name = application[1]
+        #
+        # 所以這裡刻意回傳 tuple
+
+        return (
+            row["app_no"],
+            row["name"],
+        )
+
+
+# =========================================================
+# 刪除案件
+# =========================================================
+
+def delete_application(
+    app_no: str
+):
+
+    with get_connection() as conn:
+
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            DELETE FROM applications
+
+            WHERE app_no = ?
+        """, (
+            app_no,
+        ))
+
+        conn.commit()
+
+        return (
+            cursor.rowcount > 0
+        )
