@@ -90,7 +90,7 @@ init_database()
 
 CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://hackson-ctrl-create.vercel.app")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 
 if not CHANNEL_SECRET:
@@ -1176,43 +1176,6 @@ def send_reply(
         print(f"[LINE] 成功回覆訊息給使用者！")
     except Exception as e:
         print(f"[LINE 回覆失敗 ERROR] {e}")
-
-@app.route("/applications", methods=["GET"])
-def get_application():
-
-    name = request.args.get(
-        "name",
-        default="",
-        type=str
-    ).strip()
-
-    if not name:
-
-        return jsonify({
-            "error": "請提供姓名"
-        }), 400
-
-
-    application = find_application_by_line_user(
-        name
-    )
-
-
-    if not application:
-
-        return jsonify({
-            "error": "查無此姓名"
-        }), 404
-
-
-    application_id = application[0]
-    applicant_name = application[1]
-
-
-    return jsonify({
-        "name": applicant_name,
-        "ID": application_id
-    }), 200
 
 
 from flask_cors import CORS
