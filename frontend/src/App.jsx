@@ -1,3 +1,4 @@
+import ApplyPage from './pages/ApplyPage/ApplyPage';
 import { useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';

@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { BACKEND_URL } from '../../App';
 import './SearchPage.css';
 
 function SearchPage() {
@@ -9,49 +7,36 @@ function SearchPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSearch = async () => {
+    const handleSearch = () => {
         if (!searchTerm.trim()) {
-            setErrorMessage('請先輸入名字');
+            setErrorMessage('請先輸入姓名');
             setResult(null);
             return;
         }
 
+        // 開始搜尋：顯示載入狀態、清空錯誤與舊結果
         setIsLoading(true);
         setErrorMessage('');
         setResult(null);
 
-        try {
-            const response = await axios.get(`${BACKEND_URL}/applications`, {
-                params: { name: searchTerm.trim() },
-            });
+        // 使用 setTimeout 模擬黑客松 Demo 時的網路延遲 (1.5秒)
+        setTimeout(() => {
+            // 隨機生成假的案件資料
+            const fakeId = 'CASE' + Math.floor(100000 + Math.random() * 900000); // 隨機6位數代號
+            const statusOptions = ['審核中', '已完成', '補件中'];
+            const randomStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+            const randomPercentage = Math.floor(Math.random() * 101); // 0 到 100 隨機進度
 
-            const { name, ID } = response.data;
-
-            if (!name || !ID) {
-                throw new Error('後端回傳資料格式不正確');
-            }
-
-            // 狀態與進度依需求維持前端虛擬資料。
-            const randomPercentage = Math.floor(Math.random() * 101);
-            const statusOptions = ['審核中', '已完成'];
-            const randomStatus =
-            statusOptions[Math.floor(Math.random() * statusOptions.length)];
-
+            // 設定查詢結果
             setResult({
-                name,
-                code: ID,
+                name: searchTerm.trim(),
+                code: fakeId,
                 percentage: randomPercentage,
                 status: randomStatus,
             });
-        } catch (error) {
-            setErrorMessage(
-                error.response?.status === 404
-                    ? '找不到此姓名的案件資料'
-                    : error.message || '目前無法取得案件資料，請稍後再試。',
-            );
-        } finally {
+
             setIsLoading(false);
-        }
+        }, 1500); // 1.5 秒後顯示結果
     };
 
     return (
@@ -63,8 +48,8 @@ function SearchPage() {
                     className="search-input"
                     placeholder="請輸入姓名..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} // 更新輸入框的值
-                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()} // 按下 Enter 鍵時觸發搜尋
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
                 <button className="search-button" onClick={handleSearch} disabled={isLoading}>
                     {isLoading ? '查詢中…' : '搜尋'}
