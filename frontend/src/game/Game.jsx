@@ -6,11 +6,11 @@ import GameNarration from './GameNarration';
 import './Game.css';
 
 const PROLOGUE = [
-    '安晴從昨晚開始失去聯絡。',
-    '她的帳戶在失聯前，分兩次匯出了五萬元。',
-    '房間裡只留下這支手機，以及幾段可疑的對話。',
+    '安晴最近發現，周宇辰知道許多她沒有說過的事情。',
+    '手機也顯示 HeartSync 多次存取她的相簿、麥克風及聯絡人。',
+    '請檢查 LINE、HeartSync 和 Gmail，找出她的資料如何外洩。',
+    '並阻止不必要的資料與帳號權限繼續被使用。',
 ];
-
 function CybersecurityGame() {
     const [isPrologueComplete, setIsPrologueComplete] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
