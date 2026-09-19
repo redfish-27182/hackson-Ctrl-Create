@@ -1,5 +1,6 @@
 import os
 import sys
+import sqlite3
 from pathlib import Path
 
 # =========================================================
@@ -27,6 +28,7 @@ from database import (
     init_database,
     find_application,
     bind_line_user,
+    find_application_by_name,
 )
 
 
@@ -34,7 +36,7 @@ from database import (
 # Flask / dotenv
 # =========================================================
 
-from flask import Flask, request, abort
+from flask import Flask, request, abort, jsonify
 from dotenv import load_dotenv
 
 
@@ -68,6 +70,14 @@ ENV_PATH = BASE_DIR / ".env"
 load_dotenv(ENV_PATH)
 
 app = Flask(__name__)
+
+# =========================================================
+# AI 客服狀態
+# =========================================================
+# ai_chat_users：目前已進入「其他 / AI 智慧客服」模式的 LINE 使用者
+# ai_chat_history：保存每位使用者最近幾輪對話，讓 Gemini 可以理解追問
+ai_chat_users = set()
+ai_chat_history = {}
 
 init_database()
 
@@ -111,6 +121,154 @@ configuration = Configuration(
 def home():
 
     return "Ctrl & Create LINE Bot is running!"
+
+
+# =========================================================
+# 4. 前端案件查詢 API
+#
+# 使用方式：
+# GET /applications?name=陳小明
+#
+# 成功：
+# {
+#     "name": "陳小明",
+#     "ID": "AI20260001"
+# }
+#
+# 查無姓名：HTTP 404
+# =========================================================
+
+@app.route("/applications", methods=["GET"])
+def get_application_by_name():
+
+    name = request.args.get(
+        "name",
+        default="",
+        type=str
+    ).strip()
+
+    # 沒有帶 name
+    if not name:
+        return jsonify({
+            "error": "請提供姓名"
+        }), 400
+
+
+    # demo.db 與 main.py 位於同一個 backend 資料夾
+    db_path = Path(__file__).resolve().parent / "demo.db"
+
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        # 找出資料庫內所有一般資料表
+        cursor.execute("""
+            SELECT name
+            FROM sqlite_master
+            WHERE type = 'table'
+              AND name NOT LIKE 'sqlite_%'
+        """)
+
+        table_names = [
+            row["name"]
+            for row in cursor.fetchall()
+        ]
+
+        result = None
+
+        # 為了讓目前 demo.db 的欄位名稱有些差異時仍可運作，
+        # 自動尋找具有姓名欄位與案件 ID 欄位的資料表。
+        possible_name_columns = [
+            "name",
+            "applicant_name",
+            "user_name"
+        ]
+
+        possible_id_columns = [
+            "application_id",
+            "application_no",
+            "case_id",
+            "ID",
+            "id"
+        ]
+
+        for table_name in table_names:
+
+            cursor.execute(
+                f'PRAGMA table_info("{table_name}")'
+            )
+
+            columns = [
+                row["name"]
+                for row in cursor.fetchall()
+            ]
+
+            name_column = next(
+                (
+                    col
+                    for col in possible_name_columns
+                    if col in columns
+                ),
+                None
+            )
+
+            id_column = next(
+                (
+                    col
+                    for col in possible_id_columns
+                    if col in columns
+                ),
+                None
+            )
+
+            if not name_column or not id_column:
+                continue
+
+            # table/column 名稱來自 SQLite schema，而不是前端輸入；
+            # 使用雙引號包住 identifier。
+            sql = (
+                f'SELECT "{name_column}" AS name, '
+                f'"{id_column}" AS application_id '
+                f'FROM "{table_name}" '
+                f'WHERE "{name_column}" = ? '
+                f'LIMIT 1'
+            )
+
+            cursor.execute(
+                sql,
+                (name,)
+            )
+
+            row = cursor.fetchone()
+
+            if row:
+                result = {
+                    "name": row["name"],
+                    "ID": str(row["application_id"])
+                }
+                break
+
+        conn.close()
+
+    except sqlite3.Error as e:
+
+        print(
+            f"[API /applications] Database error: {e}"
+        )
+
+        return jsonify({
+            "error": "資料庫查詢失敗"
+        }), 500
+
+
+    if result:
+        return jsonify(result), 200
+
+
+    return jsonify({
+        "error": "查無此姓名"
+    }), 404
 
 
 # =========================================================
@@ -178,10 +336,101 @@ def callback():
 def handle_text_message(event):
 
     user_message = event.message.text.strip()
+    line_user_id = event.source.user_id
 
     print(
         f"[LINE] 收到訊息：{user_message}"
     )
+
+
+    # =====================================================
+    # 0. AI 智慧客服模式
+    # =====================================================
+    # 使用者只有在輸入「其他」後才會進入這裡。
+    # 這段必須放在綁定格式判斷之前，避免 AI 對話中的數字
+    # 被誤判成「姓名 / 身分證末四碼 / 出生年月日」。
+
+    if line_user_id in ai_chat_users:
+
+        # 離開 AI 客服
+        if user_message in [
+            "離開AI客服",
+            "離開 AI 客服",
+            "退出AI客服",
+            "退出 AI 客服",
+            "返回主選單",
+        ]:
+
+            ai_chat_users.discard(line_user_id)
+            ai_chat_history.pop(line_user_id, None)
+
+            reply_text = (
+                "👋 已離開 AI 智慧客服。\n\n"
+                "您可以再次點選「客服小幫手」查看常見問題，"
+                "或輸入「其他」再次進入 AI 智慧客服。"
+            )
+
+            send_reply(event, reply_text)
+            return
+
+        # 保留最近幾輪對話，讓 Gemini 能理解「那我妹妹呢？」這類追問
+        history = ai_chat_history.setdefault(line_user_id, [])
+
+        history_text = ""
+        if history:
+            history_text = "以下是前面的對話紀錄：\n"
+            for item in history[-6:]:
+                history_text += (
+                    f"使用者：{item['user']}\n"
+                    f"客服：{item['assistant']}\n"
+                )
+            history_text += "\n"
+
+        gemini_prompt = (
+            "你現在正在 LINE 的 AI 智慧客服中。"
+            "請延續前文理解使用者的問題，並用親切、簡潔的繁體中文回答。\n\n"
+            f"{history_text}"
+            f"使用者目前的問題：{user_message}"
+        )
+
+        print(
+            f"[Gemini AI Mode] 準備詢問：{user_message}"
+        )
+
+        try:
+            reply_text = ask_gemini(gemini_prompt)
+
+            if not reply_text:
+                reply_text = (
+                    "🤖 抱歉，我目前沒有取得有效的回答。"
+                    "\n\n請換個方式再問我一次！"
+                )
+
+            history.append({
+                "user": user_message,
+                "assistant": reply_text,
+            })
+
+            # Demo 階段限制最多保存最近 6 輪，避免 prompt 越來越長
+            if len(history) > 6:
+                del history[:-6]
+
+            print(
+                f"[Gemini AI Mode] 回覆：{reply_text}"
+            )
+
+        except Exception as e:
+            print(
+                f"[Gemini Error] {e}"
+            )
+
+            reply_text = (
+                "🤖 抱歉，目前 AI 智慧客服暫時無法回覆。\n\n"
+                "請稍後再試一次，或輸入「離開AI客服」回到一般客服。"
+            )
+
+        send_reply(event, reply_text)
+        return
 
 
     # =====================================================
@@ -421,8 +670,6 @@ def handle_text_message(event):
 
             "💰 補助金額\n"
 
-            "🤖 可補助工具\n"
-
             "📝 申請流程\n"
 
             "📄 補件／核銷\n"
@@ -431,21 +678,44 @@ def handle_text_message(event):
 
             "💬 問題回報\n"
 
-            "📖 常見問題\n"
+            "✨ 其他／詢問 AI\n\n"
 
-            "🔍 搜尋\n"
-
-            "🔐 AI 資安\n\n"
-
-            "直接輸入問題就可以囉！\n\n"
-
-            "例如：\n"
+            "常見問題可以直接輸入，例如：\n"
 
             "「誰可以申請？」\n"
 
             "「補助多少錢？」\n"
 
-            "「AI 資安要注意什麼？」"
+            "「申請流程是什麼？」\n\n"
+
+            "如果上面沒有您想問的問題，"
+            "請輸入「其他」，即可進入 AI 智慧客服。"
+        )
+
+
+    # =====================================================
+    # C-1. 其他 / 進入 AI 智慧客服
+    # =====================================================
+
+    elif user_message in [
+        "其他",
+        "詢問AI",
+        "詢問 AI",
+        "AI客服",
+        "AI 客服",
+    ]:
+
+        ai_chat_users.add(line_user_id)
+        ai_chat_history[line_user_id] = []
+
+        reply_text = (
+            "✨ 已進入 AI 智慧客服模式\n\n"
+            "您現在可以直接用自己的方式問我問題，不需要按照固定格式 😊\n\n"
+            "例如：\n"
+            "「我是 22 歲，可以申請嗎？」\n"
+            "「補助最高多少錢？」\n"
+            "「生成式 AI 工具有哪些資安風險？」\n\n"
+            "輸入「離開AI客服」即可回到一般客服。"
         )
 
 
@@ -668,57 +938,18 @@ def handle_text_message(event):
 
 
     # =====================================================
-    # K. 其他問題
-    #
-    # ⭐ 這裡就是 Gemini AI 客服
+    # K. 其他未辨識訊息
     # =====================================================
+    # 一般模式不再把所有訊息直接送給 Gemini。
+    # 必須先輸入「其他」才會進入 AI 智慧客服。
 
     else:
 
-        print(
-            f"[Gemini] 準備詢問：{user_message}"
+        reply_text = (
+            "🤖 抱歉，我目前沒有找到對應的服務。\n\n"
+            "您可以輸入「客服小幫手」查看常見問題，"
+            "或輸入「其他」進入 AI 智慧客服自由提問。"
         )
-
-        try:
-
-            reply_text = ask_gemini(
-                user_message
-            )
-
-            # 避免 Gemini 意外回傳空值
-            if not reply_text:
-
-                reply_text = (
-                    "🤖 抱歉，我目前沒有取得有效的回答。"
-                    "\n\n請換個方式再問我一次！"
-                )
-
-            print(
-                f"[Gemini] 回覆：{reply_text}"
-            )
-
-
-        except Exception as e:
-
-            print(
-                f"[Gemini Error] {e}"
-            )
-
-            reply_text = (
-                "🤖 抱歉，目前 AI 客服暫時無法回覆。\n\n"
-
-                "您可以先詢問：\n"
-
-                "• 誰可以申請？\n"
-
-                "• 補助多少錢？\n"
-
-                "• 可以補助哪些工具？\n"
-
-                "• 申請流程是什麼？\n"
-
-                "• AI 資安要注意什麼？"
-            )
 
 
     # =====================================================
@@ -763,6 +994,47 @@ def send_reply(
             )
 
         )
+
+@app.route("/applications", methods=["GET"])
+def get_application():
+
+    name = request.args.get(
+        "name",
+        default="",
+        type=str
+    ).strip()
+
+    if not name:
+
+        return jsonify({
+            "error": "請提供姓名"
+        }), 400
+
+
+    application = find_application_by_name(
+        name
+    )
+
+
+    if not application:
+
+        return jsonify({
+            "error": "查無此姓名"
+        }), 404
+
+
+    application_id = application[0]
+    applicant_name = application[1]
+
+
+    return jsonify({
+        "name": applicant_name,
+        "ID": application_id
+    }), 200
+
+
+from flask_cors import CORS
+CORS(app)
 
 
 # =========================================================
