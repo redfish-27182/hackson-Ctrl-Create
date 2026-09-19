@@ -10,9 +10,13 @@ import AIChatModal from './components/chat/AIChatModal';
 import CybersecurityGame from './game/Game';
 import ApplyPage from './components/ApplyPage';
 
-// 同一個 Wi-Fi 的裝置開啟前端時，會以目前網址的主機 IP 連至後端。
-// 若後端改用其他 IP 或連接埠，只需修改此處。
-export const BACKEND_URL = `http://192.168.101.56:5000`;
+// 連接後端伺服器 (若在 Vercel 則連至 ngrok，本機則連至 localhost:5001)
+export const BACKEND_URL =
+    import.meta.env.VITE_BACKEND_URL ||
+    (typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:5001'
+        : 'https://dismantle-upstage-crowd.ngrok-free.dev');
 
 // HomePage component: 顯示首頁內容，包括 HeroCarousel 和服務介紹
 function HomePage() {

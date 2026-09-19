@@ -90,6 +90,7 @@ init_database()
 
 CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://hackson-ctrl-create.vercel.app")
 
 
 if not CHANNEL_SECRET:
@@ -123,6 +124,37 @@ configuration = Configuration(
 def home():
 
     return "Ctrl & Create LINE Bot is running!"
+
+
+def decode_line_user_id(user_id_str):
+    """解碼可能被 URL 或 Base64 編碼的 LINE user_id"""
+    if not user_id_str:
+        return user_id_str
+    import base64
+    from urllib.parse import unquote
+
+    # 1. URL 解碼
+    decoded = unquote(user_id_str).strip()
+    # 2. 若有 Base64 編碼則解碼還原
+    try:
+        padded = decoded + "=" * (-len(decoded) % 4)
+        b64 = base64.urlsafe_b64decode(padded.encode("utf-8")).decode("utf-8")
+        if b64.startswith("U"):
+            return b64
+    except Exception:
+        pass
+    return decoded
+
+
+@app.route("/api/applications/by-line/<path:line_user_id>", methods=["GET"])
+def application_by_line_user(line_user_id):
+    clean_user_id = decode_line_user_id(line_user_id)
+    application = find_application_by_line_user(clean_user_id)
+
+    if application is None:
+        return jsonify({"error": "找不到此 LINE 帳號的案件綁定"}), 404
+
+    return jsonify(application), 200
 
 
 # =========================================================
@@ -460,11 +492,26 @@ def handle_image_message(event):
 def handle_text_message(event):
 
     user_message = event.message.text.strip()
-    line_user_id = event.source.user_id
+    line_user_id = getattr(event.source, "user_id", "mock_user")
 
     print(
-        f"[LINE] 收到訊息：{user_message}"
+        f"[LINE] 收到訊息：'{user_message}' (來自 {line_user_id})"
     )
+
+    # =====================================================
+    # 0. 優先處理「一鍵申請」等專用申辦入口 (最高優先級，避免被客服模式卡住)
+    # =====================================================
+    if any(kw in user_message for kw in ["一鍵申請", "線上案件申報", "線上申辦", "一鍵申辦", "案件申報", "申請"]):
+        ai_chat_users.discard(line_user_id)
+        apply_url = f"{FRONTEND_URL}/apply?line_user_id={line_user_id}"
+        reply_text = (
+            "📋【新竹市青年數位工具補助 — 線上申辦】\n\n"
+            "已為您開啟個人專屬一鍵申辦通道！\n"
+            "系統將自動帶入您的戶籍與身分資訊。\n\n"
+            f"👉 請點擊以下專屬連結進入申辦表單：\n{apply_url}"
+        )
+        send_reply(event, reply_text)
+        return
 
 
     # =====================================================
@@ -722,27 +769,35 @@ def handle_text_message(event):
     # =====================================================
 
     web_menu_messages = {
-
         "FAQ",
-
         "FAQ (c+d)",
-
         "進度查詢",
-
         "查詢申請進度",
-
         "一鍵申請",
-
+        "線上案件申報",
+        "線上申辦",
+        "一鍵申辦",
+        "案件申報",
+        "申請",
         "資安遊戲",
     }
 
-
     if user_message in web_menu_messages:
-
-        print(
-            f"[LINE] {user_message} "
-            "預計改成 URI 網頁按鈕"
-        )
+        if user_message in ["一鍵申請", "線上案件申報", "線上申辦", "一鍵申辦", "案件申報", "申請"]:
+            line_user_id = getattr(event.source, "user_id", "mock_user")
+            apply_url = f"{FRONTEND_URL}/apply?line_user_id={line_user_id}"
+            reply_text = (
+                "📋【新竹市青年數位工具補助 — 線上申辦】\n\n"
+                "已為您開啟個人專屬一鍵申辦通道！\n"
+                "系統將自動帶入您的戶籍與身分資訊。\n\n"
+                f"👉 請點擊以下專屬連結進入申辦表單：\n{apply_url}"
+            )
+            send_reply(event, reply_text)
+        else:
+            print(
+                f"[LINE] {user_message} "
+                "預計改成 URI 網頁按鈕"
+            )
 
         return
 
@@ -1094,30 +1149,33 @@ def send_reply(
     event,
     reply_text
 ):
+    try:
+        with ApiClient(
+            configuration
+        ) as api_client:
 
-    with ApiClient(
-        configuration
-    ) as api_client:
-
-        messaging_api = MessagingApi(
-            api_client
-        )
-
-        messaging_api.reply_message(
-
-            ReplyMessageRequest(
-
-                reply_token=event.reply_token,
-
-                messages=[
-                    TextMessage(
-                        text=reply_text
-                    )
-                ],
-
+            messaging_api = MessagingApi(
+                api_client
             )
 
-        )
+            messaging_api.reply_message(
+
+                ReplyMessageRequest(
+
+                    reply_token=event.reply_token,
+
+                    messages=[
+                        TextMessage(
+                            text=reply_text
+                        )
+                    ],
+
+                )
+
+            )
+        print(f"[LINE] 成功回覆訊息給使用者！")
+    except Exception as e:
+        print(f"[LINE 回覆失敗 ERROR] {e}")
 
 @app.route("/applications", methods=["GET"])
 def get_application():

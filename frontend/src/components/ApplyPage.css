@@ -1,0 +1,288 @@
+.apply-container {
+    max-width: 900px;
+    margin: 30px auto 60px;
+    padding: 30px 40px;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+    color: #222;
+}
+
+.apply-source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e6f4ea;
+    color: #137333;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid #ceead6;
+}
+
+.apply-source-badge.web-badge {
+    background: #f1f3f4;
+    color: #5f6368;
+    border-color: #dadce0;
+}
+
+/* 頂部身份選擇 */
+.top-category-select {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+.custom-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-checkbox-label input[type="checkbox"],
+.custom-checkbox-label input[type="radio"] {
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+    accent-color: #1a365d;
+}
+
+/* 申辦表格本體 */
+.gov-form-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1.5px solid #333333;
+    margin-bottom: 24px;
+}
+
+.gov-form-table th,
+.gov-form-table td {
+    border: 1px solid #444444;
+    padding: 10px 12px;
+    font-size: 1rem;
+    vertical-align: middle;
+}
+
+/* 標題欄 (粉橘底色，還原照片風格) */
+.section-header-row {
+    background-color: #fbe6db;
+}
+
+.section-title {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #1a1a1a;
+    letter-spacing: 1px;
+}
+
+.section-header-options {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    font-size: 1rem;
+}
+
+/* 欄位標籤 */
+.cell-label {
+    background-color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+    width: 140px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+/* 表單輸入框 */
+.cell-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #111;
+    background: transparent;
+    padding: 4px 6px;
+    box-sizing: border-box;
+}
+
+.cell-input:focus {
+    background-color: #f5f9ff;
+    border-radius: 4px;
+}
+
+/* 包含年/月/日的日期輸入區 */
+.roc-date-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.date-num-input {
+    width: 48px;
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid #666;
+    outline: none;
+    font-size: 1rem;
+    background: transparent;
+    padding: 2px 0;
+}
+
+.date-num-input:focus {
+    border-bottom: 2px solid #1a365d;
+    background-color: #f5f9ff;
+}
+
+/* 通訊地址與同戶籍地核取方塊 */
+.address-with-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 功能類別橫向清單 */
+.function-options-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+}
+
+/* 費用換算區 */
+.currency-calc-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.price-input {
+    width: 120px;
+    border: none;
+    border-bottom: 1px solid #666;
+    outline: none;
+    font-size: 1rem;
+    padding: 2px 4px;
+}
+
+.price-input:focus {
+    border-bottom: 2px solid #1a365d;
+    background-color: #f5f9ff;
+}
+
+/* 信用卡選項 */
+.credit-card-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 按鈕區 */
+.apply-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 32px;
+}
+
+.btn-submit {
+    background: #1a365d;
+    color: #ffffff;
+    border: none;
+    padding: 12px 36px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-submit:hover {
+    background: #2a4365;
+    transform: translateY(-1px);
+}
+
+.btn-reset {
+    background: #f1f3f4;
+    color: #3c4043;
+    border: 1px solid #dadce0;
+    padding: 12px 28px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-reset:hover {
+    background: #e8eaed;
+}
+
+/* 成功彈出提示 */
+.submit-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.submit-modal-content {
+    background: #ffffff;
+    padding: 32px 40px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 440px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.submit-modal-content h2 {
+    color: #137333;
+    margin-bottom: 12px;
+}
+
+.submit-modal-content button {
+    margin-top: 20px;
+    background: #1a365d;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .apply-container {
+        padding: 16px 12px;
+        margin: 15px auto;
+    }
+
+    .cell-label {
+        width: 100px;
+        font-size: 0.9rem;
+    }
+
+    .top-category-select {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .section-header-options {
+        flex-direction: column;
+        gap: 6px;
+    }
+}

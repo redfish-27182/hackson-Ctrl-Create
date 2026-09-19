@@ -4,6 +4,8 @@ frontend/dist/
 frontend/package-lock.json
 backend/__pycache__/
 backend/*.pyc
+__pycache__/
+*.pyc
 backend/.venv/
 backend/venv/
 .env
