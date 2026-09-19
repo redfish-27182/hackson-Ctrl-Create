@@ -8,6 +8,7 @@ import FAQPage from './pages/FAQPage/FAQPage';
 import AIButton from './components/chat/AIButton';
 import AIChatModal from './components/chat/AIChatModal';
 import CybersecurityGame from './game/Game';
+import ApplyPage from './components/ApplyPage';
 
 // 同一個 Wi-Fi 的裝置開啟前端時，會以目前網址的主機 IP 連至後端。
 // 若後端改用其他 IP 或連接埠，只需修改此處。
@@ -50,19 +51,20 @@ function AppContent() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/case-progress" element={<SearchPage />} />
+                <Route path="/apply" element={<ApplyPage />} />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/cybersecurity-game" element={<CybersecurityGame />} />
                 <Route path="*" element={<InformationPage />} />
             </Routes>
             {!isGamePage && (
                 <>
-                    <AIButton 
-                        isOpen={isAiChatOpen} 
-                        onClick={() => setIsAiChatOpen(true)} 
+                    <AIButton
+                        isOpen={isAiChatOpen}
+                        onClick={() => setIsAiChatOpen(true)}
                     />
-                    <AIChatModal 
-                        isOpen={isAiChatOpen} 
-                        onClose={() => setIsAiChatOpen(false)} 
+                    <AIChatModal
+                        isOpen={isAiChatOpen}
+                        onClose={() => setIsAiChatOpen(false)}
                     />
                 </>
             )}
