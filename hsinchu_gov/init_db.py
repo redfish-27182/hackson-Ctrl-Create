@@ -1,7 +1,13 @@
 import sqlite3
+import os
+
+# 取得目前這支 Python 檔案所在的資料夾絕對路徑
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# 將資料庫路徑固定在跟這支 Python 檔案同一個資料夾內
+DB_PATH = os.path.join(BASE_DIR, 'hsinchu_gov.db')
 
 def init_db():
-    conn = sqlite3.connect('hsinchu_gov.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     # 建立市民資料表
@@ -32,7 +38,8 @@ def init_db():
 
     conn.commit()
     conn.close()
-    print("Mock 資料庫建置完成！(hsinchu_gov.db)")
+    print(f"Mock 資料庫建置完成！")
+    print(f"資料庫位置：{DB_PATH}")
 
 if __name__ == '__main__':
     init_db()

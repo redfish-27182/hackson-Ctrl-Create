@@ -40,23 +40,21 @@ def init_database():
 
         cursor = conn.cursor()
 
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS applications (
-
-                app_no TEXT PRIMARY KEY,
-
-                name TEXT NOT NULL,
-
-                id_last4 TEXT NOT NULL,
-
-                birthday_roc TEXT NOT NULL,
-
-                status TEXT NOT NULL,
-
-                line_user_id TEXT
-
-            )
-        """)
+    # 建立申請資料表
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS applications (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_id TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            id_last4 TEXT NOT NULL,
+            birthday_roc TEXT NOT NULL,
+            status TEXT NOT NULL,
+            progress_percent INTEGER,         
+            submitted_at TEXT,               
+            updated_at TEXT,                 
+            expected_completed_at TEXT      
+        )
+    """)
 
         # -------------------------------------------------
         # 相容舊版 database.db

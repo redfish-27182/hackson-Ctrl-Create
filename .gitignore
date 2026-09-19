@@ -36,3 +36,5 @@ Thumbs.db
 ./frontend/*.njsproj
 ./frontend/*.sln
 ./frontend/*.sw?
+.env
+.env

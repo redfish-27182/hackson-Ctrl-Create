@@ -28,7 +28,7 @@ from database import (
     init_database,
     find_application,
     bind_line_user,
-    find_application_by_name,
+    find_application_by_line_user,
 )
 
 
@@ -1135,7 +1135,7 @@ def get_application():
         }), 400
 
 
-    application = find_application_by_name(
+    application = find_application_by_line_user(
         name
     )
 
@@ -1169,6 +1169,6 @@ if __name__ == "__main__":
 
     app.run(
         host="0.0.0.0",
-        port=5000,
+        port=5001,
         debug=True
     )
