@@ -1,0 +1,265 @@
+{
+  "tools": [
+    {
+      "canonical_name": "ChatGPT",
+      "aliases": [
+        "ChatGPT",
+        "ChatGPT Plus",
+        "OpenAI ChatGPT"
+      ],
+      "company": "OpenAI",
+      "category": "通用型",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助通用型 AI"
+    },
+    {
+      "canonical_name": "Google AI",
+      "aliases": [
+        "Google AI",
+        "Gemini",
+        "Gemini Advanced",
+        "Google One AI Premium"
+      ],
+      "company": "Google",
+      "category": "通用型",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助通用型 AI"
+    },
+    {
+      "canonical_name": "Grok",
+      "aliases": [
+        "Grok",
+        "Grok Premium"
+      ],
+      "company": "xAI",
+      "category": "通用型",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助通用型 AI"
+    },
+    {
+      "canonical_name": "Claude",
+      "aliases": [
+        "Claude",
+        "Claude Pro"
+      ],
+      "company": "Anthropic",
+      "category": "通用型",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助通用型 AI"
+    },
+    {
+      "canonical_name": "Perplexity",
+      "aliases": [
+        "Perplexity",
+        "Perplexity Pro"
+      ],
+      "company": "Perplexity AI",
+      "category": "通用型",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助通用型 AI"
+    },
+    {
+      "canonical_name": "Canva AI",
+      "aliases": [
+        "Canva AI",
+        "Canva Pro"
+      ],
+      "company": "Canva",
+      "category": "影像類",
+      "origin": "澳洲",
+      "eligible": true,
+      "note": "官方文件列為可補助影像類 AI"
+    },
+    {
+      "canonical_name": "Adobe Firefly",
+      "aliases": [
+        "Adobe Firefly",
+        "Firefly"
+      ],
+      "company": "Adobe",
+      "category": "影像類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助影像類 AI"
+    },
+    {
+      "canonical_name": "Midjourney",
+      "aliases": [
+        "Midjourney"
+      ],
+      "company": "Midjourney",
+      "category": "影像類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助影像類 AI"
+    },
+    {
+      "canonical_name": "Figma AI",
+      "aliases": [
+        "Figma AI",
+        "Figma"
+      ],
+      "company": "Figma",
+      "category": "影像類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助影像類 AI"
+    },
+    {
+      "canonical_name": "Microsoft Copilot",
+      "aliases": [
+        "Microsoft Copilot",
+        "Copilot",
+        "Copilot Pro"
+      ],
+      "company": "Microsoft",
+      "category": "辦公類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助辦公類 AI"
+    },
+    {
+      "canonical_name": "copy.ai",
+      "aliases": [
+        "copy.ai",
+        "Copy AI"
+      ],
+      "company": "Copy.ai",
+      "category": "辦公類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助辦公類 AI"
+    },
+    {
+      "canonical_name": "Notion AI",
+      "aliases": [
+        "Notion AI"
+      ],
+      "company": "Notion",
+      "category": "辦公類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助辦公類 AI"
+    },
+    {
+      "canonical_name": "Jasper",
+      "aliases": [
+        "Jasper",
+        "Jasper AI"
+      ],
+      "company": "Jasper",
+      "category": "辦公類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助辦公類 AI"
+    },
+    {
+      "canonical_name": "Grammarly",
+      "aliases": [
+        "Grammarly",
+        "Grammarly Pro",
+        "Grammarly Premium"
+      ],
+      "company": "Grammarly",
+      "category": "學習類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助學習類 AI"
+    },
+    {
+      "canonical_name": "Speak",
+      "aliases": [
+        "Speak"
+      ],
+      "company": "Speakeasy Labs",
+      "category": "學習類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助學習類 AI"
+    },
+    {
+      "canonical_name": "Elicit",
+      "aliases": [
+        "Elicit"
+      ],
+      "company": "Ought",
+      "category": "學習類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助學習類 AI"
+    },
+    {
+      "canonical_name": "Cursor",
+      "aliases": [
+        "Cursor",
+        "Cursor Pro"
+      ],
+      "company": "Anysphere",
+      "category": "其他類",
+      "origin": "美國",
+      "eligible": true,
+      "note": "官方文件列為可補助其他類 AI"
+    },
+    {
+      "canonical_name": "CapCut",
+      "aliases": [
+        "CapCut"
+      ],
+      "company": "ByteDance",
+      "category": "影像類",
+      "origin": "中國大陸",
+      "eligible": false,
+      "note": "官方文件明列不予補助"
+    },
+    {
+      "canonical_name": "Kling",
+      "aliases": [
+        "Kling",
+        "Kling AI"
+      ],
+      "company": "Kuaishou",
+      "category": "影像類",
+      "origin": "中國大陸",
+      "eligible": false,
+      "note": "官方文件明列不予補助"
+    },
+    {
+      "canonical_name": "Meitu",
+      "aliases": [
+        "Meitu",
+        "美圖秀秀"
+      ],
+      "company": "Meitu",
+      "category": "影像類",
+      "origin": "中國大陸",
+      "eligible": false,
+      "note": "官方文件明列不予補助"
+    },
+    {
+      "canonical_name": "Manus",
+      "aliases": [
+        "Manus"
+      ],
+      "company": "Manus",
+      "category": "其他類",
+      "origin": "中國大陸/相關營運資訊需人工覆核",
+      "eligible": false,
+      "note": "官方文件明列不予補助"
+    }
+  ],
+  "blocked_purchase_channels": [
+    "Poe.com",
+    "GoingBus"
+  ],
+  "blocked_service_types": [
+    "credit",
+    "token",
+    "api",
+    "prepaid"
+  ]
+}
