@@ -47,15 +47,15 @@ def init_database():
             progress_percent INTEGER,         
             submitted_at TEXT,               
             updated_at TEXT,                 
-            expected_completed_at TEXT     
+            expected_completed_at TEXT,
             line_id TEXT 
         )
     """)
 
         # 自動補充舊版本缺少的欄位
-        cursor.execute("PRAGMA table_info(applications)")
-        existing_cols = {col[1] for col in cursor.fetchall()}
-        for col_name, col_type in [
+    cursor.execute("PRAGMA table_info(applications)")
+    existing_cols = {col[1] for col in cursor.fetchall()}
+    for col_name, col_type in [
             ("progress_percent", "INTEGER"),
             ("submitted_at", "TEXT"),
             ("updated_at", "TEXT"),
@@ -65,7 +65,7 @@ def init_database():
                 cursor.execute(f"ALTER TABLE applications ADD COLUMN {col_name} {col_type}")
 
         # 建立 LINE 綁定資料表
-        cursor.execute("""
+    cursor.execute("""
             CREATE TABLE IF NOT EXISTS line_bindings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 line_user_id TEXT UNIQUE NOT NULL,
@@ -93,8 +93,8 @@ def init_database():
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, demo_data)
 
-        conn.commit()
-        print(f"[Database] 資料庫初始化完成！已確保測試資料存在。")
+    conn.commit()
+    print(f"[Database] 資料庫初始化完成！已確保測試資料存在。")
 
 
 # =========================================================

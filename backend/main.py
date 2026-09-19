@@ -174,21 +174,12 @@ def application_by_line_user(line_user_id):
 
 @app.route("/applications", methods=["GET"])
 def get_application_by_name():
-
-    name = request.args.get(
-        "name",
-        default="",
-        type=str
-    ).strip()
+    name = request.args.get("name", default="", type=str).strip()
 
     # 沒有帶 name
     if not name:
-        return jsonify({
-            "error": "請提供姓名"
-        }), 400
+        return jsonify({"error": "請提供姓名"}), 400
 
-
-    # demo.db 與 main.py 位於同一個 backend 資料夾
     db_path = Path(__file__).resolve().parent / "demo.db"
 
     try:
@@ -196,114 +187,31 @@ def get_application_by_name():
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
-        # 找出資料庫內所有一般資料表
+        # 直接查詢 applications 表，撈出需要的 4 個欄位
         cursor.execute("""
-            SELECT name
-            FROM sqlite_master
-            WHERE type = 'table'
-              AND name NOT LIKE 'sqlite_%'
-        """)
+            SELECT name, application_id, status, progress_percent
+            FROM applications
+            WHERE name = ?
+            LIMIT 1
+        """, (name,))
 
-        table_names = [
-            row["name"]
-            for row in cursor.fetchall()
-        ]
-
-        result = None
-
-        # 為了讓目前 demo.db 的欄位名稱有些差異時仍可運作，
-        # 自動尋找具有姓名欄位與案件 ID 欄位的資料表。
-        possible_name_columns = [
-            "name",
-            "applicant_name",
-            "user_name"
-        ]
-
-        possible_id_columns = [
-            "application_id",
-            "application_no",
-            "case_id",
-            "ID",
-            "id"
-        ]
-
-        for table_name in table_names:
-
-            cursor.execute(
-                f'PRAGMA table_info("{table_name}")'
-            )
-
-            columns = [
-                row["name"]
-                for row in cursor.fetchall()
-            ]
-
-            name_column = next(
-                (
-                    col
-                    for col in possible_name_columns
-                    if col in columns
-                ),
-                None
-            )
-
-            id_column = next(
-                (
-                    col
-                    for col in possible_id_columns
-                    if col in columns
-                ),
-                None
-            )
-
-            if not name_column or not id_column:
-                continue
-
-            # table/column 名稱來自 SQLite schema，而不是前端輸入；
-            # 使用雙引號包住 identifier。
-            sql = (
-                f'SELECT "{name_column}" AS name, '
-                f'"{id_column}" AS application_id '
-                f'FROM "{table_name}" '
-                f'WHERE "{name_column}" = ? '
-                f'LIMIT 1'
-            )
-
-            cursor.execute(
-                sql,
-                (name,)
-            )
-
-            row = cursor.fetchone()
-
-            if row:
-                result = {
-                    "name": row["name"],
-                    "ID": str(row["application_id"])
-                }
-                break
-
+        row = cursor.fetchone()
         conn.close()
 
+        if row:
+            # 欄位名稱直接對齊前端的 key
+            return jsonify({
+                "name": row["name"],
+                "code": str(row["application_id"]),
+                "status": row["status"],
+                "percentage": row["progress_percent"] or 0
+            }), 200
+        else:
+            return jsonify({"error": "查無此姓名"}), 404
+
     except sqlite3.Error as e:
-
-        print(
-            f"[API /applications] Database error: {e}"
-        )
-
-        return jsonify({
-            "error": "資料庫查詢失敗"
-        }), 500
-
-
-    if result:
-        return jsonify(result), 200
-
-
-    return jsonify({
-        "error": "查無此姓名"
-    }), 404
-
+        print(f"[API /applications] Database error: {e}")
+        return jsonify({"error": "資料庫查詢失敗"}), 500
 
 # =========================================================
 # 4. LINE Webhook

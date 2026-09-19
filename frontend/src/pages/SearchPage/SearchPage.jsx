@@ -7,7 +7,7 @@ function SearchPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSearch = () => {
+    const handleSearch = async () => {
         if (!searchTerm.trim()) {
             setErrorMessage('請先輸入姓名');
             setResult(null);
@@ -19,24 +19,30 @@ function SearchPage() {
         setErrorMessage('');
         setResult(null);
 
-        // 使用 setTimeout 模擬黑客松 Demo 時的網路延遲 (1.5秒)
-        setTimeout(() => {
-            // 隨機生成假的案件資料
-            const fakeId = 'CASE' + Math.floor(100000 + Math.random() * 900000); // 隨機6位數代號
-            const statusOptions = ['審核中', '已完成', '補件中'];
-            const randomStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
-            const randomPercentage = Math.floor(Math.random() * 101); // 0 到 100 隨機進度
+        try {
+            // 呼叫 Flask 後端 API (預設跑在 5000 port)
+            const response = await fetch(`http://127.0.0.1:5000/applications?name=${encodeURIComponent(searchTerm.trim())}`);
+            const data = await response.json();
 
-            // 設定查詢結果
+            // 如果後端回傳 400, 404, 500 等錯誤，拋出錯誤讓 catch 捕捉
+            if (!response.ok) {
+                throw new Error(data.error || '查詢失敗，請稍後再試');
+            }
+
+            // 成功取得資料，設定結果 (這裡的 data key 已經在後端對齊)
             setResult({
-                name: searchTerm.trim(),
-                code: fakeId,
-                percentage: randomPercentage,
-                status: randomStatus,
+                name: data.name,
+                code: data.code,
+                percentage: data.percentage,
+                status: data.status,
             });
 
+        } catch (error) {
+            // 將後端回傳的錯誤訊息顯示在畫面上
+            setErrorMessage(error.message);
+        } finally {
             setIsLoading(false);
-        }, 1500); // 1.5 秒後顯示結果
+        }
     };
 
     return (
