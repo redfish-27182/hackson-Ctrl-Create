@@ -16,8 +16,10 @@ import {
 } from 'lucide-react';
 import FilesApp from './apps/FilesApp';
 import GmailApp from './apps/GmailApp';
+import HeartSyncPhishingPage from './apps/HeartSyncPhishingPage';
 import LineApp from './apps/LineApp';
 import NotesApp from './apps/NotesApp';
+import PhoneGuide from './PhoneGuide';
 import './PhoneSimulator.css';
 
 // 桌面 App 資料：screen 存在時才可切換至對應頁面。
@@ -41,7 +43,7 @@ const ASSISTIVE_ACTIONS = [
     { id: 'screenshot', name: '截圖', icon: ScanLine },
 ];
 
-function PhoneSimulator() {
+function PhoneSimulator({ guideStep = null, onGuideStepChange }) {
     // 手機目前所在畫面與輔助觸控選單的開啟狀態。
     const [currentScreen, setCurrentScreen] = useState('HOME');
     const [isAssistiveOpen, setIsAssistiveOpen] = useState(false);
@@ -52,6 +54,7 @@ function PhoneSimulator() {
     // 不可點擊 App 沒有 screen，因此不會觸發畫面切換。
     const openApp = (app) => {
         if (app.screen) setCurrentScreen(app.screen);
+        if (app.id === 'line') onGuideStepChange?.('line-first-user');
     };
 
     // 記錄按下座標，供後續計算白點拖曳距離。
@@ -91,9 +94,19 @@ function PhoneSimulator() {
 
     // 依畫面狀態載入不同 App JSX，但全部都在同一個手機螢幕中。
     const renderScreen = () => {
-        const pageProps = { onHome: () => setCurrentScreen('HOME') };
+        const pageProps = {
+            onHome: () => setCurrentScreen('HOME'),
+            onFirstUserOpened: () => onGuideStepChange?.(null),
+            onIdentityCardGuideOpen: () => {
+                onGuideStepChange?.(null);
+                window.setTimeout(() => onGuideStepChange?.('line-id-card-photos'), 20);
+            },
+            onHeartSyncOpen: () => setCurrentScreen('HEARTSYNC'),
+            onCloseHeartSync: () => setCurrentScreen('LINE'),
+        };
         if (currentScreen === 'LINE') return <LineApp {...pageProps} />;
         if (currentScreen === 'GMAIL') return <GmailApp {...pageProps} />;
+        if (currentScreen === 'HEARTSYNC') return <HeartSyncPhishingPage onClose={pageProps.onCloseHeartSync} />;
         if (currentScreen === 'FILES') return <FilesApp {...pageProps} />;
         if (currentScreen === 'NOTES') return <NotesApp {...pageProps} />;
 
@@ -107,6 +120,7 @@ function PhoneSimulator() {
                             <button
                                 className="phone-app"
                                 data-interactive={isInteractive}
+                                data-guide={app.id === 'line' ? 'line-app' : undefined}
                                 key={app.id}
                                 type="button"
                                 aria-label={isInteractive ? `開啟 ${app.name}` : app.name}
@@ -133,6 +147,7 @@ function PhoneSimulator() {
                 <div className="phone-simulator__island" aria-hidden="true" />
                 <div className="phone-simulator__status-bar"><span>9:41</span><span>5G ▰◔</span></div>
                 {renderScreen()}
+                <PhoneGuide step={guideStep} />
 
                 {/* 點擊白點後顯示四方向的輔助觸控選單。 */}
                 {isAssistiveOpen && (

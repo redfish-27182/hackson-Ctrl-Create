@@ -1,0 +1,20 @@
+/* driver.js 的 LINE 教學提示樣式。 */
+.phone-line-guide.driver-popover {
+    max-width: 220px;
+    color: #18181b;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .32);
+}
+
+.phone-line-guide .driver-popover-title {
+    color: #06a84d;
+    font-size: 14px;
+}
+
+.phone-line-guide .driver-popover-description {
+    margin: 6px 0 0;
+    color: #52525b;
+    font-size: 13px;
+    line-height: 1.5;
+}

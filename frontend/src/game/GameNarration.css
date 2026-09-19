@@ -1,25 +1,25 @@
 .game-narration {
     position: absolute;
-    top: -18px;
-    bottom: -18px;
+    top: -10px;
+    bottom: -10px;
     left: 50%;
     z-index: 4;
     display: flex;
     flex-direction: column;
     width: min(430px, calc(100vw - 16px));
-    padding: clamp(32px, 7vw, 54px);
-    color: #f8f8f4;
-    border: 1px solid rgba(255, 242, 45, .42);
-    background: rgba(0, 0, 0, .91);
-    box-shadow: 0 26px 70px rgba(0, 0, 0, .7), inset 0 0 48px rgba(255, 242, 45, .035);
+    padding: clamp(28px, 6vw, 44px);
+    color: #fff;
+    background: rgba(0, 0, 0, .72);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, .38);
+    backdrop-filter: blur(2px);
     transform: translateX(-50%);
 }
 
-.game-narration__label { margin: 0 0 32px; color: #fff22d; font-size: .73rem; font-weight: 900; letter-spacing: .16em; }
-.game-narration__lines { display: grid; gap: 20px; }
-.game-narration__line { margin: 0; font-size: clamp(1.05rem, 2.5vw, 1.3rem); line-height: 1.75; letter-spacing: .05em; opacity: 0; animation: narration-line-in .55s ease forwards; }
-.game-narration__start { align-self: flex-end; margin-top: auto; padding: 12px 18px; color: #050505; border: 1px solid #fff22d; background: #fff22d; cursor: pointer; font: inherit; font-size: .85rem; font-weight: 900; letter-spacing: .08em; animation: narration-line-in .45s ease both; }
-.game-narration__start:hover, .game-narration__start:focus-visible { color: #fff22d; background: transparent; outline: none; }
+.game-narration__label { margin: 0 0 24px; color: rgba(255, 255, 255, .68); font-size: .64rem; font-weight: 700; letter-spacing: .14em; }
+.game-narration__lines { display: grid; gap: 15px; }
+.game-narration__line { margin: 0; color: rgba(255, 255, 255, .94); font-size: clamp(.88rem, 2.2vw, 1.05rem); line-height: 1.7; letter-spacing: .035em; opacity: 0; animation: narration-line-in .55s ease forwards; }
+.game-narration__start { align-self: flex-end; margin-top: auto; padding: 10px 15px; color: #111; border: 0; border-radius: 2px; background: rgba(255, 255, 255, .9); cursor: pointer; font: inherit; font-size: .78rem; font-weight: 800; letter-spacing: .06em; animation: narration-line-in .45s ease both; }
+.game-narration__start:hover, .game-narration__start:focus-visible { color: #fff; background: rgba(255, 255, 255, .22); outline: 1px solid rgba(255, 255, 255, .7); }
 
 @keyframes narration-line-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 

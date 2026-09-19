@@ -255,6 +255,20 @@
     font-size: 13px;
 }
 
+/* 語音、證件附件與已收回訊息的劇情呈現。 */
+.line-message__bubble[data-type="voice"] { min-width: 136px; color: #0f766e; }
+.line-message__bubble[data-type="attachment"] { color: #7c2d12; background: #ffedd5; }
+.line-identity-photos { display: grid; justify-items: end; gap: 8px; max-width: 78%; }
+.line-identity-photo { display: grid; grid-template-columns: 30px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 8px; align-items: center; width: 188px; padding: 9px 10px; color: #7c2d12; border: 0; border-radius: 14px; background: #ffedd5; box-shadow: 0 1px 2px rgba(0, 0, 0, .08); cursor: pointer; font: inherit; text-align: left; }
+.line-identity-photo svg { grid-row: 1 / 3; justify-self: center; color: #ea580c; }
+.line-identity-photo span { overflow: hidden; font-size: 12px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.line-identity-photo small { color: #a16207; font-size: 10px; }
+.line-revoked { display: grid; justify-items: center; gap: 7px; padding: 8px 0; color: #71717a; font-size: 11px; }
+.line-revoked button { padding: 5px 9px; color: #2563eb; border: 0; border-radius: 6px; background: #dbeafe; cursor: pointer; font: inherit; font-size: 11px; }
+.line-revoked p { margin: 0; padding: 8px 10px; color: #b91c1c; border-radius: 7px; background: #fef2f2; font-weight: 700; }
+.line-heart-sync-link { display: grid; gap: 9px; width: min(210px, 78%); padding: 12px; color: #831843; border-radius: 12px; background: linear-gradient(135deg, #fce7f3, #fbcfe8); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); font-size: 12px; line-height: 1.45; }
+.line-heart-sync-link button { justify-self: start; padding: 6px 10px; color: #fff; border: 0; border-radius: 14px; background: #db2777; cursor: pointer; font: inherit; font-size: 11px; font-weight: 700; }
+
 /* 日期分隔與可放大的急診室證據圖片。 */
 .line-message-group {
     display: grid;

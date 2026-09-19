@@ -1,0 +1,615 @@
+.heart-sync-phishing {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    overflow-y: auto;
+    color: #251329;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 245, 251, .92)),
+        linear-gradient(135deg, #fff, #ffe4f0 48%, #eee8ff);
+    scrollbar-width: none;
+}
+
+.heart-sync-phishing::-webkit-scrollbar {
+    display: none;
+}
+
+.heart-sync-phishing button,
+.heart-sync-phishing input {
+    font: inherit;
+}
+
+.heart-sync-phishing__header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 58px;
+    padding: 10px 14px 7px;
+    color: #b51b62;
+    background: rgba(255, 255, 255, .86);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 rgba(244, 114, 182, .12);
+}
+
+.heart-sync-phishing__brand {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 5px;
+    line-height: 1.05;
+}
+
+.heart-sync-phishing__brand span {
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.heart-sync-phishing__brand small {
+    grid-column: 2;
+    color: #8d6a7b;
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.heart-sync-phishing__header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.heart-sync-phishing__fake-icon,
+.heart-sync-phishing__close {
+    display: grid;
+    place-items: center;
+    width: 27px;
+    height: 27px;
+    padding: 0;
+    color: #ad1d5e;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .68);
+    cursor: pointer;
+}
+
+.heart-sync-phishing__header > .heart-sync-phishing__fake-icon {
+    transform: rotate(180deg);
+}
+
+.heart-sync-phishing__close {
+    color: #fff;
+    background: #b91c5f;
+    box-shadow: 0 5px 12px rgba(185, 28, 95, .24);
+}
+
+.heart-sync-phishing__dashboard,
+.heart-sync-phishing__step {
+    display: grid;
+    gap: 13px;
+    padding: 12px 17px 26px;
+}
+
+.heart-sync-phishing__dashboard {
+    padding-bottom: 78px;
+    text-align: center;
+}
+
+.heart-sync-phishing__eyebrow {
+    justify-self: center;
+    margin: 0;
+    padding: 4px 10px;
+    color: #9d1b62;
+    border-radius: 999px;
+    background: #fff0f7;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: .04em;
+}
+
+.heart-sync-phishing__dashboard h1 {
+    margin: -2px 0 -10px;
+    color: #1f2937;
+    font-size: 30px;
+    line-height: 1.05;
+}
+
+.heart-sync-phishing__subtitle {
+    margin: 0;
+    color: #ec4899;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__hero-card {
+    position: relative;
+    min-height: 145px;
+    overflow: hidden;
+    border-radius: 15px;
+    background:
+        radial-gradient(circle at 22% 30%, rgba(255, 255, 255, .92), transparent 20%),
+        radial-gradient(circle at 78% 32%, rgba(255, 255, 255, .82), transparent 21%),
+        linear-gradient(135deg, #f472b6, #7c3aed 58%, #172554);
+    box-shadow: 0 10px 24px rgba(124, 58, 237, .2);
+}
+
+.heart-sync-phishing__hero-card::before,
+.heart-sync-phishing__hero-card::after {
+    position: absolute;
+    bottom: 0;
+    width: 132px;
+    height: 116px;
+    border-radius: 70px 70px 18px 18px;
+    background: rgba(255, 255, 255, .26);
+    content: '';
+}
+
+.heart-sync-phishing__hero-card::before {
+    left: 8px;
+    transform: rotate(8deg);
+}
+
+.heart-sync-phishing__hero-card::after {
+    right: 4px;
+    transform: rotate(-7deg);
+}
+
+.heart-sync-phishing__hero-people {
+    position: absolute;
+    inset: 22px 20px 34px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    color: rgba(255, 255, 255, .88);
+}
+
+.heart-sync-phishing__hero-people span {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .72);
+    box-shadow: 0 34px 0 18px rgba(255, 255, 255, .2);
+}
+
+.heart-sync-phishing__hero-badge {
+    position: absolute;
+    right: 24px;
+    bottom: 13px;
+    left: 24px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 10px;
+    color: #a21754;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .88);
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__feature-list,
+.heart-sync-phishing__form-list,
+.heart-sync-phishing__permission-list,
+.heart-sync-phishing__result-list {
+    display: grid;
+    gap: 10px;
+}
+
+.heart-sync-phishing__feature-card,
+.heart-sync-phishing__field,
+.heart-sync-phishing__upload-card,
+.heart-sync-phishing__permission-card,
+.heart-sync-phishing__result-list article {
+    border: 1px solid rgba(236, 72, 153, .11);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, .9);
+    box-shadow: 0 8px 20px rgba(157, 23, 77, .06);
+}
+
+.heart-sync-phishing__feature-card {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 9px;
+    padding: 11px;
+    text-align: left;
+}
+
+.heart-sync-phishing__feature-icon,
+.heart-sync-phishing__permission-card > span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    color: #d9468f;
+    border-radius: 13px;
+    background: #ffe0ec;
+}
+
+.heart-sync-phishing__feature-title,
+.heart-sync-phishing__permission-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.heart-sync-phishing__feature-title b,
+.heart-sync-phishing__permission-title b {
+    color: #37152b;
+    font-size: 12px;
+}
+
+.heart-sync-phishing__feature-title small,
+.heart-sync-phishing__permission-title small,
+.heart-sync-phishing__upload-title small {
+    flex: none;
+    padding: 2px 6px;
+    color: #b91c5f;
+    border-radius: 999px;
+    background: #fff0f6;
+    font-size: 8px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__feature-card p,
+.heart-sync-phishing__permission-card p,
+.heart-sync-phishing__result-list p {
+    margin: 4px 0 0;
+    color: #6b5262;
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+.heart-sync-phishing__primary-button,
+.heart-sync-phishing__secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 46px;
+    width: 100%;
+    padding: 0 18px;
+    color: #fff;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff4f93, #8b2be2);
+    box-shadow: 0 12px 22px rgba(168, 85, 247, .24);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.heart-sync-phishing__secondary-button {
+    min-height: 32px;
+    color: #b91c5f;
+    background: #fff0f7;
+    box-shadow: none;
+    font-size: 10px;
+}
+
+.heart-sync-phishing__primary-button--fake {
+    margin-top: 2px;
+    min-height: 42px;
+    font-size: 12px;
+}
+
+.heart-sync-phishing__tabbar {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 9px 10px;
+    color: #8d6a7b;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .94);
+    box-shadow: 0 -7px 22px rgba(157, 23, 77, .08);
+}
+
+.heart-sync-phishing__tabbar span {
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    font-size: 8px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__tabbar span[data-active='true'] {
+    color: #ec4899;
+}
+
+.heart-sync-phishing__progress-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #b91c5f;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.heart-sync-phishing__progress-row small {
+    padding: 3px 8px;
+    color: #7c3aed;
+    border-radius: 999px;
+    background: #f3e8ff;
+    font-size: 9px;
+}
+
+.heart-sync-phishing__progress-track {
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #fce7f3;
+}
+
+.heart-sync-phishing__progress-track span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ff4f93, #a855f7);
+}
+
+.heart-sync-phishing__step-card {
+    display: grid;
+    gap: 12px;
+}
+
+.heart-sync-phishing__step-card h2 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 21px;
+    line-height: 1.14;
+}
+
+.heart-sync-phishing__step-card > p {
+    margin: -6px 0 0;
+    color: #6f4c60;
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.heart-sync-phishing__match-strip {
+    display: grid;
+    grid-template-columns: 38px 1fr auto;
+    align-items: center;
+    gap: 9px;
+    padding: 10px;
+    color: #b91c5f;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(157, 23, 77, .06);
+}
+
+.heart-sync-phishing__match-strip b {
+    display: block;
+    color: #412033;
+    font-size: 11px;
+}
+
+.heart-sync-phishing__match-strip small {
+    color: #8d6a7b;
+    font-size: 9px;
+}
+
+.heart-sync-phishing__mini-avatar {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fb7185, #a855f7);
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.heart-sync-phishing__field {
+    display: grid;
+    gap: 7px;
+    padding: 11px;
+}
+
+.heart-sync-phishing__field span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #9d174d;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.heart-sync-phishing__field input {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 9px;
+    color: #1f2937;
+    border: 0;
+    border-radius: 10px;
+    outline: 0;
+    background: #f6f7fb;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.heart-sync-phishing__field input:focus {
+    box-shadow: inset 0 0 0 2px rgba(236, 72, 153, .28);
+}
+
+.heart-sync-phishing__privacy-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 10px;
+    color: #a21caf;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .68);
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__upload-card {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+}
+
+.heart-sync-phishing__upload-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 9px;
+}
+
+.heart-sync-phishing__upload-title span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #37152b;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.heart-sync-phishing__photo-preview {
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    min-height: 118px;
+    overflow: hidden;
+    border-radius: 14px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 50% 35%, rgba(255, 255, 255, .88), transparent 15%),
+        linear-gradient(135deg, #f9a8d4, #7c3aed);
+}
+
+.heart-sync-phishing__photo-preview span {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .84);
+    box-shadow: 0 40px 0 18px rgba(255, 255, 255, .25);
+}
+
+.heart-sync-phishing__photo-preview p {
+    margin: 0;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(157, 23, 77, .6);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__voice-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 62px;
+    border-radius: 14px;
+    background: #f4f0ff;
+}
+
+.heart-sync-phishing__voice-wave span {
+    width: 4px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ec4899, #7c3aed);
+}
+
+.heart-sync-phishing__permission-card {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 9px;
+    padding: 11px;
+}
+
+.heart-sync-phishing__result-card {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid rgba(168, 85, 247, .12);
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(157, 23, 77, .08);
+}
+
+.heart-sync-phishing__heart-meter {
+    display: grid;
+    place-items: center;
+    gap: 2px;
+    width: 128px;
+    height: 128px;
+    margin: 0 auto;
+    color: #d81b60;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at center, #fff 55%, transparent 57%),
+        conic-gradient(#ec4899 0 96%, #fce7f3 96% 100%);
+    text-align: center;
+}
+
+.heart-sync-phishing__heart-meter span {
+    align-self: end;
+    font-size: 8px;
+    font-weight: 900;
+}
+
+.heart-sync-phishing__heart-meter b {
+    font-size: 30px;
+    line-height: 1;
+}
+
+.heart-sync-phishing__heart-meter small {
+    align-self: start;
+    color: #8d6a7b;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__score-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.heart-sync-phishing__score-grid span {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 8px 9px;
+    color: #6f4c60;
+    border-radius: 12px;
+    background: #f8f2ff;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.heart-sync-phishing__score-grid b {
+    color: #d81b60;
+}
+
+.heart-sync-phishing__result-list article {
+    padding: 12px;
+}
+
+.heart-sync-phishing__result-list b {
+    color: #37152b;
+    font-size: 13px;
+}

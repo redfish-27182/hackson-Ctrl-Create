@@ -16,6 +16,7 @@ function CybersecurityGame() {
     const [isPrologueComplete, setIsPrologueComplete] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
     const [narrationStage, setNarrationStage] = useState(null);
+    const [guideStep, setGuideStep] = useState(null);
 
     return (
         <main className="cyber-game">
@@ -45,10 +46,16 @@ function CybersecurityGame() {
             ) : (
                 <div className="game-phone-stage">
                     <div className="game-phone-shell">
-                        <PhoneSimulator />
+                        <PhoneSimulator
+                            guideStep={guideStep}
+                            onGuideStepChange={setGuideStep}
+                        />
                         <GameNarration
                             stageId={narrationStage}
-                            onComplete={() => setNarrationStage(null)}
+                            onComplete={() => {
+                                setNarrationStage(null);
+                                setGuideStep('line-app');
+                            }}
                         />
                     </div>
                 </div>
