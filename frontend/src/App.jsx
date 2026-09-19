@@ -7,6 +7,7 @@ import SearchPage from './components/searchPage';
 import FAQPage from './components/FAQPage';
 import AIButton from './components/AIButton';
 import AIChatModal from './components/AIChatModal';
+import ApplyPage from './components/ApplyPage';
 
 // 同一個 Wi-Fi 的裝置開啟前端時，會以目前網址的主機 IP 連至後端。
 // 若後端改用其他 IP 或連接埠，只需修改此處。
@@ -47,6 +48,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/case-progress" element={<SearchPage />} />
+                <Route path="/apply" element={<ApplyPage />} />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="*" element={<InformationPage />} />
             </Routes>
