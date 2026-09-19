@@ -1,0 +1,204 @@
+/* 手機機身與外框。 */
+.phone-simulator {
+    position: relative;
+    width: min(360px, calc(100vw - 32px));
+    height: 720px;
+    padding: 4px;
+    overflow: hidden;
+    border: 9px solid #09090b;
+    border-radius: 3.4rem;
+    background: #09090b;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, .65);
+    outline: 1px solid #52525b;
+}
+
+/* 螢幕負責裁切桌布、App 頁面和可拖曳白點。 */
+.phone-simulator__screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 2.75rem;
+    background: linear-gradient(to bottom, #082f49, #312e81, #701a75);
+    color: #fff;
+}
+
+.phone-simulator__wallpaper {
+    position: absolute;
+    inset: 0;
+    opacity: .7;
+    background: radial-gradient(circle at 20% 8%, rgba(125, 211, 252, .35), transparent 28%), radial-gradient(circle at 75% 70%, rgba(232, 121, 249, .3), transparent 35%);
+    pointer-events: none;
+}
+
+.phone-simulator__island {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    z-index: 2;
+    width: 112px;
+    height: 28px;
+    border-radius: 999px;
+    background: #000;
+    transform: translateX(-50%);
+}
+
+.phone-simulator__status-bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 28px 0;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.phone-simulator__status-bar span:last-child { letter-spacing: .18em; }
+
+.phone-home { position: relative; z-index: 1; height: 100%; }
+
+/* 主畫面的四欄 App 網格。 */
+.phone-home__apps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px 16px;
+    padding: 40px 24px 0;
+}
+
+.phone-app {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    color: inherit;
+    border: 0;
+    background: transparent;
+    cursor: default;
+}
+
+.phone-app[data-interactive="true"] { cursor: pointer; }
+
+.phone-app__icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, .2);
+    transition: transform .18s ease;
+}
+
+.phone-app[data-interactive="true"]:hover .phone-app__icon { transform: scale(1.05); }
+.phone-app[data-interactive="true"]:active .phone-app__icon { transform: scale(.95); }
+
+.phone-app__name {
+    width: 64px;
+    margin-top: 4px;
+    overflow: hidden;
+    color: #d4d4d8;
+    font-size: 11px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+}
+
+.phone-app__badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    border: 2px solid #312e81;
+    border-radius: 50%;
+    background: #ef4444;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+    font-size: 10px;
+}
+
+/* App 圖示配色由 data-app 對應，保持 JSX 的 className 簡短。 */
+.phone-app__icon[data-app="line"] { background: #06c755; }
+.phone-app__icon[data-app="gmail"] { background: #ea4335; }
+.phone-app__icon[data-app="files"],
+.phone-app__icon[data-app="appstore"] { background: #007aff; }
+.phone-app__icon[data-app="notes"] { color: #27272a; background: #ffd60a; }
+.phone-app__icon[data-app="fb"] { background: #1877f2; }
+.phone-app__icon[data-app="ig"] { background: linear-gradient(to top right, #eab308, #ec4899, #9333ea); }
+.phone-app__icon[data-app="threads"] { background: #000; }
+.phone-app__icon[data-app="settings"] { background: #52525b; }
+
+.phone-home__dock {
+    position: absolute;
+    right: 20px;
+    bottom: 28px;
+    left: 20px;
+    display: flex;
+    justify-content: center;
+    padding: 12px 32px;
+    border-radius: 1.8rem;
+    background: rgba(255, 255, 255, .2);
+    backdrop-filter: blur(12px);
+}
+
+.phone-home__dock span { width: 112px; height: 6px; border-radius: 999px; background: rgba(255, 255, 255, .9); }
+
+/* 可拖曳的 iOS 輔助觸控白點。 */
+.phone-assistive-dot {
+    position: absolute;
+    z-index: 8;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 6px solid rgba(39, 39, 42, .35);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .92);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .3);
+    cursor: grab;
+    touch-action: none;
+}
+
+.phone-assistive-dot:active { cursor: grabbing; }
+
+/* 點擊白點後顯示的灰色四方向選單。 */
+.phone-assistive-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 7;
+    width: 178px;
+    height: 178px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 26px;
+    background: rgba(63, 63, 70, .94);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, .4);
+    backdrop-filter: blur(12px);
+    transform: translate(-50%, -50%);
+}
+
+.phone-assistive-menu__action {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    width: 65px;
+    padding: 0;
+    color: #fff;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    font-size: 10px;
+}
+
+.phone-assistive-menu__action:hover { color: #dbeafe; }
+.phone-assistive-menu__action[data-action="rotation"] { top: 14px; left: 56px; }
+.phone-assistive-menu__action[data-action="home"] { bottom: 14px; left: 56px; }
+.phone-assistive-menu__action[data-action="control"] { top: 57px; left: 8px; }
+.phone-assistive-menu__action[data-action="screenshot"] { top: 57px; right: 8px; }

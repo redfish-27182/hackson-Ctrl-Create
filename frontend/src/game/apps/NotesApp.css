@@ -1,0 +1,7 @@
+/* 備忘錄的紙張背景與待辦清單。 */
+.phone-page--notes { background: #fffef3; }
+.notes-app__note { margin: 18px; padding: 18px; border-radius: 12px; background: #fff; box-shadow: 0 3px 14px rgba(0, 0, 0, .08); }
+.notes-app__note h2 { margin: 0; font-size: 21px; }
+.notes-app__note > small { display: block; margin: 6px 0 22px; color: #a1a1aa; }
+.notes-app__note p { display: flex; gap: 9px; align-items: center; margin: 15px 0; font-size: 14px; }
+.notes-app__note svg { color: #eab308; }
