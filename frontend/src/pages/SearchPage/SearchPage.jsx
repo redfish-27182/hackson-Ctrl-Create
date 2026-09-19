@@ -20,8 +20,9 @@ function SearchPage() {
         setResult(null);
 
         try {
-            // 呼叫 Flask 後端 API (預設跑在 5000 port)
-    const response = await fetch(`http://localhost:5001/applications?name=${encodeURIComponent(searchTerm.trim())}`);            const data = await response.json();
+            // 呼叫 Flask 後端 API (預設跑在 5001 port)
+            const response = await fetch(`http://localhost:5001/applications?name=${encodeURIComponent(searchTerm.trim())}`);
+            const data = await response.json();
 
             // 如果後端回傳 400, 404, 500 等錯誤，拋出錯誤讓 catch 捕捉
             if (!response.ok) {
