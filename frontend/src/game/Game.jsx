@@ -6,8 +6,8 @@ import GameNarration from './GameNarration';
 import './Game.css';
 
 const PROLOGUE = [
-    '過去 7 天內，HeartSync 曾多次存取您的相簿、麥克風及聯絡人。',
-];
+    'HeartSync 在過去 7 天內，多次存取相簿、麥克風與聯絡人。',
+];;
 function CybersecurityGame() {
     const [isPrologueComplete, setIsPrologueComplete] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
@@ -21,7 +21,7 @@ function CybersecurityGame() {
             {!hasStarted ? (
                 <section className="game-prologue" aria-labelledby="prologue-title">
                   <p className="game-prologue__eyebrow">PRIVACY ALERT</p>
-<h1 id="prologue-title">手機隱私權通知</h1>
+<h1 id="prologue-title">偵測到異常存取</h1>
                     <PixelTypewriter
                         paragraphs={PROLOGUE}
                         onComplete={() => setIsPrologueComplete(true)}
@@ -35,7 +35,7 @@ function CybersecurityGame() {
                                 setNarrationStage('phone-intro');
                             }}
                         >
-                            調查開始
+                           查看安晴的訊息
                         </button>
                     )}
                 </section>
