@@ -15,12 +15,11 @@
     content: '';
 }
 
-/* 游戲背景效果 */
 .cyber-game::before {
     inset: 0;
     background: linear-gradient(
-        90deg, transparent 49.9%, 
-        rgba(255, 255, 255, .06) 50%, 
+        90deg, transparent 49.9%,
+        rgba(255, 255, 255, .06) 50%,
         transparent 50.1%
     );
     background-size: 80px 100%;
@@ -38,16 +37,15 @@
 }
 
 .game-exit {
-    position: relative; /* 讓 z-index 生效 */
-    z-index: 1; /* 確保按鈕在背景之上 */
-    display: inline-flex; /* 使用 inline-flex 以便按鈕可以自動調整大小 */
-    align-items: center; /* 垂直置中按鈕內容 */
-    min-height: 42px; /* 設定按鈕的最小高度 */
-    margin: 28px 40px; /* 設定按鈕的外邊距 */
-    padding: 0 16px; /* 設定按鈕的內邊距，左右各 16px */
-    color: #f8f8f4; /* 設定按鈕文字顏色 */
-    border: 1px solid rgba(255, 255, 255, .32); /* 設定按鈕邊框顏色和透明度 */
-    /* 設定按鈕圓角 */
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    margin: 28px 40px;
+    padding: 0 16px;
+    color: #f8f8f4;
+    border: 1px solid rgba(255, 255, 255, .32);
     border-radius: 4px;
     background: rgba(5, 5, 5, .72);
     font-size: .84rem;
@@ -66,8 +64,79 @@
     transform: translateX(-3px);
 }
 
+.game-prologue {
+    position: relative;
+    z-index: 1;
+    width: min(760px, calc(100% - 48px));
+    margin: clamp(60px, 13vh, 150px) auto 48px;
+    padding: clamp(32px, 6vw, 68px);
+    color: #f8f8f4;
+    border: 1px solid rgba(255, 242, 45, .6);
+    background: linear-gradient(135deg, rgba(26, 28, 24, .96), rgba(5, 5, 5, .93));
+    box-shadow: 0 0 0 7px rgba(255, 242, 45, .06), 0 28px 65px rgba(0, 0, 0, .55), inset 0 0 48px rgba(255, 242, 45, .035);
+}
+
+.game-prologue::before {
+    position: absolute;
+    top: -1px;
+    left: clamp(32px, 8vw, 92px);
+    width: 120px;
+    height: 3px;
+    background: #fff22d;
+    content: '';
+}
+
+.game-prologue__eyebrow {
+    margin: 0 0 12px;
+    color: #fff22d;
+    font-size: .76rem;
+    font-weight: 900;
+    letter-spacing: .16em;
+}
+
+.game-prologue h1 {
+    margin: 0 0 clamp(26px, 4vw, 42px);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    letter-spacing: .12em;
+}
+
+.game-prologue__next {
+    margin-top: 28px;
+    padding: 12px 20px;
+    color: #050505;
+    border: 1px solid #fff22d;
+    background: #fff22d;
+    cursor: pointer;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 900;
+    letter-spacing: .1em;
+    transition: background-color .2s ease, color .2s ease, transform .2s ease;
+}
+
+.game-prologue__next:hover,
+.game-prologue__next:focus-visible {
+    color: #fff22d;
+    background: transparent;
+    outline: none;
+    transform: translateX(4px);
+}
+
+.game-phone-stage {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    padding: 8px 16px 48px;
+}
+
 @media (max-width: 700px) {
     .game-exit {
         margin: 20px 24px;
+    }
+
+    .game-prologue {
+        width: min(100% - 32px, 760px);
+        margin-top: 44px;
     }
 }

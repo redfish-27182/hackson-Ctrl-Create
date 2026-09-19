@@ -7,13 +7,16 @@ function AIChatModal({ isOpen, onClose }) {
   const [message, setMessage] = useState('');
   const inputRef = useRef(null);
 
+  // 當模態視窗開啟時，監聽鍵盤事件以支援 ESC 鍵關閉，並在開啟後自動聚焦輸入框。
   useEffect(() => {
-    if (!isOpen) return undefined;
+    if (!isOpen) return undefined; // 只在模態視窗開啟時添加事件監聽器
 
+    // 當模態視窗開啟時，監聽鍵盤事件以支援 ESC 鍵關閉，並在開啟後自動聚焦輸入框。       
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') onClose();
     };
-
+    
+    // 設定延遲以確保模態視窗已渲染完成後再聚焦輸入框。
     window.addEventListener('keydown', handleKeyDown);
     const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 260);
     return () => {

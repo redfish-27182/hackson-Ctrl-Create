@@ -1,0 +1,37 @@
+@font-face {
+    font-family: "Unifont";
+    src: url("https://unifoundry.com/pub/unifont/unifont-18.0.01/font-builds/unifont-18.0.01.otf") format("opentype");
+    font-display: swap;
+}
+
+.pixel-typewriter {
+    width: 100%;
+    color: #fff;
+    font-family: "Unifont", "Noto Sans Mono CJK TC", monospace;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    font-weight: 400;
+    letter-spacing: .08em;
+    line-height: 1.7;
+    text-align: left;
+    text-shadow: 0 0 12px rgba(255, 255, 255, .35);
+}
+
+.pixel-typewriter__line {
+    min-height: 1.7em;
+    margin: 0 0 .42em;
+    overflow-wrap: anywhere;
+}
+
+.pixel-typewriter__cursor {
+    display: inline-block;
+    margin-left: .15em;
+    animation: pixel-typewriter-blink .85s steps(1, end) infinite;
+}
+
+@keyframes pixel-typewriter-blink {
+    50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pixel-typewriter__cursor { animation: none; }
+}
