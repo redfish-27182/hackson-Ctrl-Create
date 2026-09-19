@@ -27,6 +27,7 @@ from database import (
     init_database,
     find_application,
     bind_line_user,
+    find_application_by_line_user,
 )
 
 
@@ -34,7 +35,7 @@ from database import (
 # Flask / dotenv
 # =========================================================
 
-from flask import Flask, request, abort
+from flask import Flask, request, abort, jsonify
 from dotenv import load_dotenv
 
 
@@ -69,6 +70,14 @@ load_dotenv(ENV_PATH)
 
 app = Flask(__name__)
 
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    return response
+
 init_database()
 
 
@@ -78,6 +87,7 @@ init_database()
 
 CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 
 if not CHANNEL_SECRET:
@@ -111,6 +121,16 @@ configuration = Configuration(
 def home():
 
     return "Ctrl & Create LINE Bot is running!"
+
+
+@app.route("/api/applications/by-line/<line_user_id>", methods=["GET"])
+def application_by_line_user(line_user_id):
+    application = find_application_by_line_user(line_user_id)
+
+    if application is None:
+        return jsonify({"error": "找不到此 LINE 帳號的案件綁定"}), 404
+
+    return jsonify(application)
 
 
 # =========================================================
@@ -366,10 +386,16 @@ def handle_text_message(event):
 
     if user_message in web_menu_messages:
 
-        print(
-            f"[LINE] {user_message} "
-            "預計改成 URI 網頁按鈕"
-        )
+        if user_message == "一鍵申請":
+            line_user_id = event.source.user_id
+            apply_url = f"{FRONTEND_URL}/apply?line_user_id={line_user_id}"
+            reply_text = f"請點擊以下連結開始申請：\n{apply_url}"
+            send_reply(event, reply_text)
+        else:
+            print(
+                f"[LINE] {user_message} "
+                "預計改成 URI 網頁按鈕"
+            )
 
         return
 

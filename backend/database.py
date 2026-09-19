@@ -99,3 +99,26 @@ def bind_line_user(line_user_id, application_id):
 
     conn.commit()
     conn.close()
+
+
+def find_application_by_line_user(line_user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT a.application_id, a.name, a.id_last4, a.birthday_roc,
+               a.status, a.progress_percent, a.submitted_at,
+               a.updated_at, a.expected_completed_at
+        FROM line_bindings AS b
+        JOIN applications AS a ON a.application_id = b.application_id
+        WHERE b.line_user_id = ?
+    """, (line_user_id,))
+
+    row = cursor.fetchone()
+    columns = [column[0] for column in cursor.description]
+    conn.close()
+
+    if row is None:
+        return None
+
+    return dict(zip(columns, row))
