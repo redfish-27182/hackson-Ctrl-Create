@@ -1,0 +1,73 @@
+.cyber-game {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+        linear-gradient(120deg, rgba(255, 242, 45, .07), transparent 32%),
+        radial-gradient(circle at 88% 12%, rgba(255, 255, 255, .08) 0 1px, transparent 1.5px) 0 0 / 24px 24px,
+        #050505;
+}
+
+.cyber-game::before,
+.cyber-game::after {
+    position: absolute;
+    pointer-events: none;
+    content: '';
+}
+
+/* 游戲背景效果 */
+.cyber-game::before {
+    inset: 0;
+    background: linear-gradient(
+        90deg, transparent 49.9%, 
+        rgba(255, 255, 255, .06) 50%, 
+        transparent 50.1%
+    );
+    background-size: 80px 100%;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .8), transparent 70%);
+}
+
+.cyber-game::after {
+    right: -90px;
+    bottom: -90px;
+    width: 340px;
+    height: 340px;
+    border: 1px solid rgba(255, 242, 45, .2);
+    border-radius: 50%;
+    box-shadow: 0 0 0 48px rgba(255, 242, 45, .035), 0 0 0 96px rgba(255, 242, 45, .02);
+}
+
+.game-exit {
+    position: relative; /* 讓 z-index 生效 */
+    z-index: 1; /* 確保按鈕在背景之上 */
+    display: inline-flex; /* 使用 inline-flex 以便按鈕可以自動調整大小 */
+    align-items: center; /* 垂直置中按鈕內容 */
+    min-height: 42px; /* 設定按鈕的最小高度 */
+    margin: 28px 40px; /* 設定按鈕的外邊距 */
+    padding: 0 16px; /* 設定按鈕的內邊距，左右各 16px */
+    color: #f8f8f4; /* 設定按鈕文字顏色 */
+    border: 1px solid rgba(255, 255, 255, .32); /* 設定按鈕邊框顏色和透明度 */
+    /* 設定按鈕圓角 */
+    border-radius: 4px;
+    background: rgba(5, 5, 5, .72);
+    font-size: .84rem;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-decoration: none;
+    transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.game-exit:hover,
+.game-exit:focus-visible {
+    color: #050505;
+    border-color: #fff22d;
+    background: #fff22d;
+    outline: none;
+    transform: translateX(-3px);
+}
+
+@media (max-width: 700px) {
+    .game-exit {
+        margin: 20px 24px;
+    }
+}

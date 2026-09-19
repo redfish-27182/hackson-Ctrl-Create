@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
-import TopNavigation from './components/TopNavigation';
-import HeroCarousel from './components/HeroCarousel';
-import SearchPage from './components/searchPage';
-import FAQPage from './components/FAQPage';
-import AIButton from './components/AIButton';
-import AIChatModal from './components/AIChatModal';
-import ApplyPage from './components/ApplyPage';
+import TopNavigation from './components/layout/TopNavigation';
+import HeroCarousel from './components/home/HeroCarousel';
+import SearchPage from './pages/SearchPage/SearchPage';
+import FAQPage from './pages/FAQPage/FAQPage';
+import AIButton from './components/chat/AIButton';
+import AIChatModal from './components/chat/AIChatModal';
+import CybersecurityGame from './game/Game';
 
 // 同一個 Wi-Fi 的裝置開啟前端時，會以目前網址的主機 IP 連至後端。
 // 若後端改用其他 IP 或連接埠，只需修改此處。
@@ -39,27 +39,42 @@ function InformationPage() {
 }
 
 // App component: 根組件，負責路由與全域狀態管理
-function App() {
-    const [isAiChatOpen, setIsAiChatOpen] = useState(false);
+function AppContent() {
+    const [isAiChatOpen, setIsAiChatOpen] = useState(false); // 狀態：AI 聊天視窗是否開啟
+    const { pathname } = useLocation(); // 取得當前路徑名
+    const isGamePage = pathname === '/cybersecurity-game'; // 判斷是否在遊戲頁面
 
     return (
-        <BrowserRouter>
-            <TopNavigation />
+        <>
+            {!isGamePage && <TopNavigation />}
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/case-progress" element={<SearchPage />} />
                 <Route path="/apply" element={<ApplyPage />} />
                 <Route path="/faq" element={<FAQPage />} />
+                <Route path="/cybersecurity-game" element={<CybersecurityGame />} />
                 <Route path="*" element={<InformationPage />} />
             </Routes>
-            <AIButton
-                isOpen={isAiChatOpen}
-                onClick={() => setIsAiChatOpen(true)}
-            />
-            <AIChatModal
-                isOpen={isAiChatOpen}
-                onClose={() => setIsAiChatOpen(false)}
-            />
+            {!isGamePage && (
+                <>
+                    <AIButton
+                        isOpen={isAiChatOpen}
+                        onClick={() => setIsAiChatOpen(true)}
+                    />
+                    <AIChatModal
+                        isOpen={isAiChatOpen}
+                        onClose={() => setIsAiChatOpen(false)}
+                    />
+                </>
+            )}
+        </>
+    );
+}
+
+function App() {
+    return (
+        <BrowserRouter>
+            <AppContent />
         </BrowserRouter>
     );
 }

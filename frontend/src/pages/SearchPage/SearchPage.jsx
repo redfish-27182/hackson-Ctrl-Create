@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { BACKEND_URL } from '../App';
-import './searchPage.css';
+import { BACKEND_URL } from '../../App';
+import './SearchPage.css';
 
 function SearchPage() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -57,15 +57,14 @@ function SearchPage() {
     return (
         <main className="search-page">
             <h1 className="title">進度查詢系統</h1>
-
             <div className="search-bar">
                 <input
                     type="text"
                     className="search-input"
                     placeholder="請輸入姓名..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    onChange={(e) => setSearchTerm(e.target.value)} // 更新輸入框的值
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()} // 按下 Enter 鍵時觸發搜尋
                 />
                 <button className="search-button" onClick={handleSearch} disabled={isLoading}>
                     {isLoading ? '查詢中…' : '搜尋'}
