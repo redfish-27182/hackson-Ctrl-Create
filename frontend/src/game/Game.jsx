@@ -6,10 +6,7 @@ import GameNarration from './GameNarration';
 import './Game.css';
 
 const PROLOGUE = [
-    '安晴最近發現，周宇辰知道許多她沒有說過的事情。',
-    '手機也顯示 HeartSync 多次存取她的相簿、麥克風及聯絡人。',
-    '請檢查 LINE、HeartSync 和 Gmail，找出她的資料如何外洩。',
-    '並阻止不必要的資料與帳號權限繼續被使用。',
+    '過去 7 天內，HeartSync 曾多次存取您的相簿、麥克風及聯絡人。',
 ];
 function CybersecurityGame() {
     const [isPrologueComplete, setIsPrologueComplete] = useState(false);
@@ -23,8 +20,8 @@ function CybersecurityGame() {
 
             {!hasStarted ? (
                 <section className="game-prologue" aria-labelledby="prologue-title">
-                    <p className="game-prologue__eyebrow">MISSION BRIEFING</p>
-                    <h1 id="prologue-title">前情提要</h1>
+                  <p className="game-prologue__eyebrow">PRIVACY ALERT</p>
+<h1 id="prologue-title">手機隱私權通知</h1>
                     <PixelTypewriter
                         paragraphs={PROLOGUE}
                         onComplete={() => setIsPrologueComplete(true)}
