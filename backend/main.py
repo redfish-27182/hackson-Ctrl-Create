@@ -29,7 +29,7 @@ from database import (
     init_database,
     find_application,
     bind_line_user,
-    find_application_by_name,
+    find_application_by_line_user,
 )
 
 
@@ -1106,7 +1106,7 @@ def get_application():
         }), 400
 
 
-    application = find_application_by_name(
+    application = find_application_by_line_user(
         name
     )
 
