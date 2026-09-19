@@ -1,20 +1,19 @@
-import { Camera, ChevronLeft, Image, MessageCircle, Phone, Plus, Search, Video } from 'lucide-react';
+import { Camera, ChevronLeft, Image, Phone, Plus, Search, Video } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import './PhoneAppBase.css';
 import './LineApp.css';
 
 const INITIAL_USERS = [
-    { id: 'xiao-wen',     image: 'xiao-wen.png',    name: '小文',     latestMessage: '那個人可能就是你。',     time: '18:15', unreadCount: 2 },
-    { id: 'ya-ting',      image: 'ya-ting.jpg',     name: '雅婷',     latestMessage: '週末要不要一起吃飯？',     time: '16:42', unreadCount: 3 },
-    { id: 'government',   image: 'Government.jpg',  name: 'AI領航青年數位工具',   latestMessage: '🔗 帳號綁定: 為了讓您之後可以快速查詢申請進度，請先完成身分綁定。', time: '昨天',  unreadCount: 1 },
-    { id: 'zhou-yu-chen', image: 'zhou-yuchen.png', name: '周宇辰❤️', latestMessage: '周宇辰收回了一則訊息。', time: '21:18', unreadCount: 1 },
-    { id: 'dad',          image: 'dad.jpg',              name: '爸爸',     latestMessage: '到家記得說一聲',           time: '昨天',  unreadCount: 0 },
-    { id: 'hui-ling',     image: null,              name: '惠玲',     latestMessage: '照片我晚點傳給你',         time: '星期三', unreadCount: 0 },
-    { id: 'landlord-lin', image: null,              name: '林先生',   latestMessage: '這個月房租已收到',         time: '星期二', unreadCount: 0 },
-    { id: 'kevin',        image: null,              name: 'Kevin',    latestMessage: '哈哈沒問題',               time: '星期一', unreadCount: 0 },
- ];
+    { id: 'xiao-wen', image: 'xiao-wen.png', name: '小文', latestMessage: '那個人可能就是你。', time: '18:15', unreadCount: 2 },
+    { id: 'ya-ting', image: 'ya-ting.jpg', name: '雅婷', latestMessage: '週末要不要一起吃飯？', time: '16:42', unreadCount: 3 },
+    { id: 'government', image: 'Government.jpg', name: 'AI領航青年數位工具', latestMessage: '🔗 帳號綁定：請先完成身分綁定。', time: '昨天', unreadCount: 1 },
+    { id: 'zhou-yu-chen', image: 'zhou-yuchen.png', name: '周宇辰❤️', latestMessage: '只是戀愛測驗，不會怎樣啦。', time: '22:06', unreadCount: 1 },
+    { id: 'dad', image: 'dad.jpg', name: '爸爸', latestMessage: '到家記得說一聲', time: '昨天', unreadCount: 0 },
+    { id: 'hui-ling', image: null, name: '惠玲', latestMessage: '照片我晚點傳給你', time: '星期三', unreadCount: 0 },
+    { id: 'landlord-lin', image: null, name: '林先生', latestMessage: '這個月房租已收到', time: '星期二', unreadCount: 0 },
+    { id: 'kevin', image: null, name: 'Kevin', latestMessage: '哈哈沒問題', time: '星期一', unreadCount: 0 },
+];
 
-// 周宇辰的劇情對話。isMine 為 true 表示安晴傳送；revoked 表示可點擊查看的收回訊息。
 const CONVERSATIONS = {
     'zhou-yu-chen': [
         { id: 'z1', date: '7月1日 21:18｜情侶快問快答', text: '寶貝，我們來玩情侶快問快答。\n看看我們到底有多了解彼此。', isMine: false, time: '21:18' },
@@ -40,7 +39,6 @@ const CONVERSATIONS = {
         { id: 'z21', date: '7月2日 21:12｜員工旅遊', text: '好啦，你不要傳給別人喔。', isMine: true, time: '21:16', read: true },
         { id: 'z22', date: '7月2日 21:12｜員工旅遊', text: '【身分證正面照片】\n【身分證背面照片】', isMine: true, time: '21:17', read: true, type: 'attachment' },
         { id: 'z23', date: '7月2日 21:12｜員工旅遊', text: '收到了，我現在就幫妳登記❤️', isMine: false, time: '21:17' },
-        { id: 'z24', date: '7月2日 21:12｜員工旅遊', revoked: true, isMine: false, time: '21:18' },
         { id: 'z25', date: '7月2日 22:03｜HeartSync戀愛測驗', text: '寶貝，我剛剛發現一個超準的AI戀愛測驗。\n它可以分析我們的照片和聲音，算出契合度。', isMine: false, time: '22:03' },
         { id: 'z26', date: '7月2日 22:03｜HeartSync戀愛測驗', text: '感覺很好玩，叫什麼？', isMine: true, time: '22:04', read: true },
         { id: 'z27', date: '7月2日 22:03｜HeartSync戀愛測驗', text: 'HeartSync。\n我已經填完了，現在只差妳。', isMine: false, time: '22:04' },
@@ -82,8 +80,15 @@ const CONVERSATIONS = {
     ],
 };
 
-const IMAGE_MODULES = import.meta.glob('./LineUserImage/*.{png,jpg,jpeg,webp,gif}', { eager: true, import: 'default', query: '?url' });
-const LINE_IMAGES = Object.fromEntries(Object.entries(IMAGE_MODULES).map(([path, url]) => [path.split('/').pop(), url]));
+const IMAGE_MODULES = import.meta.glob('./LineUserImage/*.{png,jpg,jpeg,webp,gif}', {
+    eager: true,
+    import: 'default',
+    query: '?url',
+});
+
+const LINE_IMAGES = Object.fromEntries(
+    Object.entries(IMAGE_MODULES).map(([path, url]) => [path.split('/').pop(), url]),
+);
 
 const IDENTITY_CARD_PHOTOS = [
     { id: 'front', label: '身分證正面照片', guide: 'id-card-front' },
@@ -92,135 +97,186 @@ const IDENTITY_CARD_PHOTOS = [
 
 function LineAvatar({ image, name }) {
     const src = LINE_IMAGES[image];
-    if (src) return <img className="line-avatar" src={src} alt={`${name} 的大頭貼`} />;
-    return <span className="line-avatar line-avatar--fallback" aria-label={`${name} 的大頭貼`}>{name.slice(0, 1)}</span>;
+
+    if (src) {
+        return <img className="line-avatar" src={src} alt={`${name} 的大頭貼`} />;
+    }
+
+    return (
+        <span className="line-avatar line-avatar--fallback" aria-label={`${name} 的大頭貼`}>
+            {name.slice(0, 1)}
+        </span>
+    );
 }
 
 function LineApp({ onHome, onFirstUserOpened, onHeartSyncOpen, onIdentityCardGuideOpen }) {
     const [users, setUsers] = useState(INITIAL_USERS);
     const [selectedUserId, setSelectedUserId] = useState(null);
-    const [isRevokedMessageVisible, setIsRevokedMessageVisible] = useState(false);
     const messageListRef = useRef(null);
-    const selectedUser = useMemo(() => users.find((user) => user.id === selectedUserId), [selectedUserId, users]);
+
+    const selectedUser = useMemo(
+        () => users.find((user) => user.id === selectedUserId),
+        [selectedUserId, users],
+    );
 
     useEffect(() => {
         if (!selectedUserId || !messageListRef.current) return undefined;
+
         const timeoutId = window.setTimeout(() => {
             messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
         }, 0);
+
         return () => window.clearTimeout(timeoutId);
     }, [selectedUserId]);
 
     const openConversation = (userId) => {
-        setUsers((currentUsers) => currentUsers.map((user) => (user.id === userId ? { ...user, unreadCount: 0 } : user)));
+        setUsers((currentUsers) => currentUsers.map((user) => (
+            user.id === userId ? { ...user, unreadCount: 0 } : user
+        )));
         setSelectedUserId(userId);
-        setIsRevokedMessageVisible(false);
-        if (userId === INITIAL_USERS[0].id) onFirstUserOpened?.();
+
+        if (userId === INITIAL_USERS[0].id) {
+            onFirstUserOpened?.();
+        }
     };
 
     if (selectedUser) {
         const messages = CONVERSATIONS[selectedUser.id] ?? [];
         let previousDate = '';
+
         return (
             <section className="phone-page phone-page--line">
                 <header className="phone-page__header line-app__chat-header">
-                    <button className="phone-page__back" type="button" onClick={() => setSelectedUserId(null)}><ChevronLeft size={20} /> 聊天</button>
-                    <div className="line-app__chat-title"><LineAvatar image={selectedUser.image} name={selectedUser.name} /><b>{selectedUser.name}</b></div>
-                    <span className="line-app__chat-actions"><Phone size={17} /><Video size={17} /></span>
+                    <button
+                        className="phone-page__back"
+                        type="button"
+                        onClick={() => setSelectedUserId(null)}
+                    >
+                        <ChevronLeft size={20} /> 聊天
+                    </button>
+
+                    <div className="line-app__chat-title">
+                        <LineAvatar image={selectedUser.image} name={selectedUser.name} />
+                        <b>{selectedUser.name}</b>
+                    </div>
+
+                    <span className="line-app__chat-actions">
+                        <Phone size={17} />
+                        <Video size={17} />
+                    </span>
                 </header>
+
                 <div className="line-app__message-list" ref={messageListRef}>
                     {messages.map((message) => {
                         const showDate = message.date !== previousDate;
                         previousDate = message.date;
+
                         return (
-                           <div className="line-message-group" key={message.id}>
-    {showDate && (
-        <p className="line-message__date">
-            {message.date}
-        </p>
-    )}
+                            <div className="line-message-group" key={message.id}>
+                                {showDate && (
+                                    <p className="line-message__date">{message.date}</p>
+                                )}
 
-    {message.link ? (
-        <div className="line-heart-sync-link">
-            <b>HeartSync｜測出你們的戀愛契合度</b>
+                                {message.link ? (
+                                    <div className="line-heart-sync-link">
+                                        <b>HeartSync｜測出你們的戀愛契合度</b>
+                                        <button type="button" onClick={onHeartSyncOpen}>
+                                            開始測驗
+                                        </button>
+                                    </div>
+                                ) : message.id === 'z22' && selectedUser.id === 'zhou-yu-chen' ? (
+                                    <div className="line-message" data-mine={message.isMine}>
+                                        <div className="line-identity-photos">
+                                            {IDENTITY_CARD_PHOTOS.map((photo) => (
+                                                <button
+                                                    className="line-identity-photo"
+                                                    data-guide={photo.guide}
+                                                    key={photo.id}
+                                                    type="button"
+                                                    onClick={onIdentityCardGuideOpen}
+                                                >
+                                                    <Image size={18} />
+                                                    <span>{photo.label}</span>
+                                                    <small>點擊查看</small>
+                                                </button>
+                                            ))}
+                                        </div>
 
-            <button
-                type="button"
-                onClick={onHeartSyncOpen}
-            >
-                開始測驗
-            </button>
-        </div>
-    ) : message.id === 'z22' &&
-      selectedUser.id === 'zhou-yu-chen' ? (
-        <div
-            className="line-message"
-            data-mine={message.isMine}
-        >
-            <div className="line-identity-photos">
-                {IDENTITY_CARD_PHOTOS.map((photo) => (
-                    <button
-                        className="line-identity-photo"
-                        data-guide={photo.guide}
-                        key={photo.id}
-                        type="button"
-                        onClick={onIdentityCardGuideOpen}
-                    >
-                        <Image size={18} />
-                        <span>{photo.label}</span>
-                        <small>點擊查看</small>
-                    </button>
-                ))}
-            </div>
-
-            <div className="line-message__meta">
-                {message.isMine && (
-                    <span>
-                        {message.read ? '已讀' : '未讀'}
-                    </span>
-                )}
-                <time>{message.time}</time>
-            </div>
-        </div>
-    ) : (
-        <div
-            className="line-message"
-            data-mine={message.isMine}
-        >
-            <p>{message.text}</p>
-
-            <div className="line-message__meta">
-                {message.isMine && (
-                    <span>
-                        {message.read ? '已讀' : '未讀'}
-                    </span>
-                )}
-                <time>{message.time}</time>
-            </div>
-        </div>
-    )}
-</div>
+                                        <div className="line-message__meta">
+                                            <span>{message.read ? '已讀' : '未讀'}</span>
+                                            <time>{message.time}</time>
+                                        </div>
+                                    </div>
                                 ) : (
                                     <div className="line-message" data-mine={message.isMine}>
-                                        <div className="line-message__bubble" data-type={message.type}>{message.text && <p>{message.text}</p>}</div>
-                                        <div className="line-message__meta">{message.isMine && <span>{message.read ? '已讀' : '未讀'}</span>}<time>{message.time}</time></div>
+                                        <div
+                                            className="line-message__bubble"
+                                            data-type={message.type}
+                                        >
+                                            {message.text && <p>{message.text}</p>}
+                                        </div>
+
+                                        <div className="line-message__meta">
+                                            {message.isMine && (
+                                                <span>{message.read ? '已讀' : '未讀'}</span>
+                                            )}
+                                            <time>{message.time}</time>
+                                        </div>
                                     </div>
                                 )}
                             </div>
                         );
                     })}
                 </div>
-                <div className="line-app__composer" aria-label="傳送訊息工具列"><button type="button" aria-label="更多功能"><Plus size={20} /></button><button type="button" aria-label="拍照"><Camera size={20} /></button><button type="button" aria-label="選擇圖片"><Image size={20} /></button><div className="line-app__input" aria-label="訊息輸入框">Aa</div></div>
+
+                <div className="line-app__composer" aria-label="傳送訊息工具列">
+                    <button type="button" aria-label="更多功能"><Plus size={20} /></button>
+                    <button type="button" aria-label="拍照"><Camera size={20} /></button>
+                    <button type="button" aria-label="選擇圖片"><Image size={20} /></button>
+                    <div className="line-app__input" aria-label="訊息輸入框">Aa</div>
+                </div>
             </section>
         );
     }
 
     return (
         <section className="phone-page phone-page--line">
-            <div className="line-app__search" aria-hidden="true"><Search size={16} /><span>搜尋</span></div>
-            <div className="line-app__user-list" aria-label="LINE 聊天列表">
-                {users.map((user) => <button className="line-user" data-guide={user.id === INITIAL_USERS[0].id ? 'line-first-user' : undefined} key={user.id} type="button" onClick={() => openConversation(user.id)}><LineAvatar image={user.image} name={user.name} /><div className="line-user__content"><b>{user.name}</b><span>{user.latestMessage}</span></div><div className="line-user__meta"><time>{user.time}</time>{user.unreadCount > 0 && <span>{user.unreadCount}</span>}</div></button>)}
+            <div className="line-app__search" aria-hidden="true">
+                <Search size={16} />
+                <span>搜尋</span>
             </div>
+
+            <div className="line-app__user-list" aria-label="LINE 聊天列表">
+                {users.map((user) => (
+                    <button
+                        className="line-user"
+                        data-guide={user.id === INITIAL_USERS[0].id ? 'line-first-user' : undefined}
+                        key={user.id}
+                        type="button"
+                        onClick={() => openConversation(user.id)}
+                    >
+                        <LineAvatar image={user.image} name={user.name} />
+
+                        <div className="line-user__content">
+                            <b>{user.name}</b>
+                            <span>{user.latestMessage}</span>
+                        </div>
+
+                        <div className="line-user__meta">
+                            <time>{user.time}</time>
+                            {user.unreadCount > 0 && <span>{user.unreadCount}</span>}
+                        </div>
+                    </button>
+                ))}
+            </div>
+
+            <button
+                className="phone-page__home"
+                type="button"
+                onClick={onHome}
+            >
+                返回主畫面
+            </button>
         </section>
     );
 }
