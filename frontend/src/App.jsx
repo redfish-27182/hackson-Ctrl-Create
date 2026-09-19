@@ -10,9 +10,11 @@ import AIChatModal from './components/chat/AIChatModal';
 import CybersecurityGame from './game/Game';
 import ApplyPage from './components/ApplyPage';
 
-// 同一個 Wi-Fi 的裝置開啟前端時，會以目前網址的主機 IP 連至後端。
-// 若後端改用其他 IP 或連接埠，只需修改此處。
-export const BACKEND_URL = `http://192.168.101.56:5000`;
+// 前端自動以目前網址主機 (如 localhost) 連至後端 5000 port
+export const BACKEND_URL =
+    typeof window !== 'undefined' && window.location.hostname
+        ? `http://${window.location.hostname}:5000`
+        : 'http://localhost:5000';
 
 // HomePage component: 顯示首頁內容，包括 HeroCarousel 和服務介紹
 function HomePage() {

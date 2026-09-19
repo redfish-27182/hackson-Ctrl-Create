@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 from pathlib import Path
 
 
@@ -22,12 +23,24 @@ def init_database():
             id_last4 TEXT NOT NULL,
             birthday_roc TEXT NOT NULL,
             status TEXT NOT NULL,
-            progress_percent INTEGER,         #新增：進度百分比 (例如 50)
-            submitted_at TEXT,               #新增：送件時間 (例如 '2026-03-01 10:00:00')
-            updated_at TEXT,                 #新增：更新時間
-            expected_completed_at TEXT       #新增：預計完成時間
+            progress_percent INTEGER,
+            submitted_at TEXT,
+            updated_at TEXT,
+            expected_completed_at TEXT
         )
     """)
+
+    # 自動補充舊版本缺少的欄位
+    cursor.execute("PRAGMA table_info(applications)")
+    existing_cols = {col[1] for col in cursor.fetchall()}
+    for col_name, col_type in [
+        ("progress_percent", "INTEGER"),
+        ("submitted_at", "TEXT"),
+        ("updated_at", "TEXT"),
+        ("expected_completed_at", "TEXT"),
+    ]:
+        if col_name not in existing_cols:
+            cursor.execute(f"ALTER TABLE applications ADD COLUMN {col_name} {col_type}")
 
     # 建立 LINE 綁定資料表
     cursor.execute("""
@@ -103,22 +116,82 @@ def bind_line_user(line_user_id, application_id):
 
 def find_application_by_line_user(line_user_id):
     conn = get_connection()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT a.application_id, a.name, a.id_last4, a.birthday_roc,
-               a.status, a.progress_percent, a.submitted_at,
-               a.updated_at, a.expected_completed_at
+        SELECT a.application_id, a.name, a.id_last4, a.birthday_roc, a.status
         FROM line_bindings AS b
         JOIN applications AS a ON a.application_id = b.application_id
         WHERE b.line_user_id = ?
     """, (line_user_id,))
 
     row = cursor.fetchone()
-    columns = [column[0] for column in cursor.description]
+
+    # 若 LINE 尚未綁定，依據 line_user_id 動態分配不同的 Demo 申請人
+    if row is None:
+        cursor.execute("""
+            SELECT application_id, name, id_last4, birthday_roc, status
+            FROM applications
+        """)
+        all_apps = cursor.fetchall()
+        if all_apps:
+            idx = int(hashlib.md5(str(line_user_id).encode("utf-8")).hexdigest(), 16) % len(all_apps)
+            row = all_apps[idx]
+            # 自動儲存綁定，確保同一位使用者後續進入都是同一個人
+            try:
+                cursor.execute("""
+                    INSERT OR REPLACE INTO line_bindings (line_user_id, application_id)
+                    VALUES (?, ?)
+                """, (str(line_user_id), row["application_id"]))
+                conn.commit()
+            except Exception as e:
+                print(f"[DB Auto-bind warning] {e}")
+
     conn.close()
 
     if row is None:
         return None
 
-    return dict(zip(columns, row))
+    app_data = dict(row)
+
+    raw_bday = str(app_data.get("birthday_roc", ""))
+    if len(raw_bday) == 6:
+        b_year, b_month, b_day = raw_bday[:2], raw_bday[2:4], raw_bday[4:6]
+    elif len(raw_bday) == 7:
+        b_year, b_month, b_day = raw_bday[:3], raw_bday[3:5], raw_bday[5:7]
+    else:
+        b_year, b_month, b_day = "92", "05", "17"
+
+    last4 = str(app_data.get("id_last4", "1234"))
+    id_number = f"O12345{last4}"
+
+    return {
+        "application_id": app_data.get("application_id"),
+        "name": app_data.get("name"),
+        "id_last4": last4,
+        "id_number": id_number,
+        "birthday_roc": raw_bday,
+        "birthday_year": b_year,
+        "birthday_month": b_month,
+        "birthday_day": b_day,
+        "status": app_data.get("status"),
+        # 照片對應表單缺少的資料，先提供假資料，待日後補齊 DB
+        "target_type": "general",             # general: 一般青年, specific: 特定對象與文化語言保存者
+        "phone": "0912-345-678",
+        "email": f"applicant_{last4}@gmail.com",
+        "registered_address": "新竹市東區中央路 120 號",
+        "mailing_address": "新竹市東區中央路 120 號",
+        "same_address": True,
+        "payment_cycle": "monthly",           # annual: 年費制, monthly: 月費制
+        "software_function": "general",       # general, image, office, learn, other
+        "software_name": "ChatGPT Plus",
+        "software_company": "OpenAI, Inc.",
+        "origin": "美國",
+        "purchase_year": "113",
+        "purchase_month": "03",
+        "purchase_day": "15",
+        "original_price": "USD 20.00",
+        "twd_price": "640",
+        "credit_card_type": "self",           # self: 本人信用卡, proxy: 父母、配偶或法定代理人信用卡
+    }

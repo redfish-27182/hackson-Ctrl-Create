@@ -28,7 +28,7 @@ from database import (
     init_database,
     find_application,
     bind_line_user,
-    find_application_by_name,
+    find_application_by_line_user,
 )
 
 
@@ -138,6 +138,16 @@ configuration = Configuration(
 def home():
 
     return "Ctrl & Create LINE Bot is running!"
+
+
+@app.route("/api/applications/by-line/<line_user_id>", methods=["GET"])
+def application_by_line_user(line_user_id):
+    application = find_application_by_line_user(line_user_id)
+
+    if application is None:
+        return jsonify({"error": "找不到此 LINE 帳號的案件綁定"}), 404
+
+    return jsonify(application), 200
 
 
 # =========================================================
@@ -353,11 +363,26 @@ def callback():
 def handle_text_message(event):
 
     user_message = event.message.text.strip()
-    line_user_id = event.source.user_id
+    line_user_id = getattr(event.source, "user_id", "mock_user")
 
     print(
-        f"[LINE] 收到訊息：{user_message}"
+        f"[LINE] 收到訊息：'{user_message}' (來自 {line_user_id})"
     )
+
+    # =====================================================
+    # 0. 優先處理「一鍵申請」等專用申辦入口 (最高優先級，避免被客服模式卡住)
+    # =====================================================
+    if any(kw in user_message for kw in ["一鍵申請", "線上案件申報", "線上申辦", "一鍵申辦", "案件申報", "申請"]):
+        ai_chat_users.discard(line_user_id)
+        apply_url = f"{FRONTEND_URL}/apply?line_user_id={line_user_id}"
+        reply_text = (
+            "📋【新竹市青年數位工具補助 — 線上申辦】\n\n"
+            "已為您開啟個人專屬一鍵申辦通道！\n"
+            "系統將自動帶入您的戶籍與身分資訊。\n\n"
+            f"👉 請點擊以下專屬連結進入申辦表單：\n{apply_url}"
+        )
+        send_reply(event, reply_text)
+        return
 
 
     # =====================================================
@@ -615,27 +640,29 @@ def handle_text_message(event):
     # =====================================================
 
     web_menu_messages = {
-
         "FAQ",
-
         "FAQ (c+d)",
-
         "進度查詢",
-
         "查詢申請進度",
-
         "一鍵申請",
-
+        "線上案件申報",
+        "線上申辦",
+        "一鍵申辦",
+        "案件申報",
+        "申請",
         "資安遊戲",
     }
 
-
     if user_message in web_menu_messages:
-
-        if user_message == "一鍵申請":
-            line_user_id = event.source.user_id
+        if user_message in ["一鍵申請", "線上案件申報", "線上申辦", "一鍵申辦", "案件申報", "申請"]:
+            line_user_id = getattr(event.source, "user_id", "mock_user")
             apply_url = f"{FRONTEND_URL}/apply?line_user_id={line_user_id}"
-            reply_text = f"請點擊以下連結開始申請：\n{apply_url}"
+            reply_text = (
+                "📋【新竹市青年數位工具補助 — 線上申辦】\n\n"
+                "已為您開啟個人專屬一鍵申辦通道！\n"
+                "系統將自動帶入您的戶籍與身分資訊。\n\n"
+                f"👉 請點擊以下專屬連結進入申辦表單：\n{apply_url}"
+            )
             send_reply(event, reply_text)
         else:
             print(
@@ -995,30 +1022,33 @@ def send_reply(
     event,
     reply_text
 ):
+    try:
+        with ApiClient(
+            configuration
+        ) as api_client:
 
-    with ApiClient(
-        configuration
-    ) as api_client:
-
-        messaging_api = MessagingApi(
-            api_client
-        )
-
-        messaging_api.reply_message(
-
-            ReplyMessageRequest(
-
-                reply_token=event.reply_token,
-
-                messages=[
-                    TextMessage(
-                        text=reply_text
-                    )
-                ],
-
+            messaging_api = MessagingApi(
+                api_client
             )
 
-        )
+            messaging_api.reply_message(
+
+                ReplyMessageRequest(
+
+                    reply_token=event.reply_token,
+
+                    messages=[
+                        TextMessage(
+                            text=reply_text
+                        )
+                    ],
+
+                )
+
+            )
+        print(f"[LINE] 成功回覆訊息給使用者！")
+    except Exception as e:
+        print(f"[LINE 回覆失敗 ERROR] {e}")
 
 @app.route("/applications", methods=["GET"])
 def get_application():
@@ -1036,7 +1066,7 @@ def get_application():
         }), 400
 
 
-    application = find_application_by_name(
+    application = find_application_by_line_user(
         name
     )
 
