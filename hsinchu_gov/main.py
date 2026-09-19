@@ -2,6 +2,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sqlite3
+import os
+
+# 取得目前這支 Python 檔案所在的資料夾絕對路徑
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# 將資料庫路徑固定在跟這支 Python 檔案同一個資料夾內
+DB_PATH = os.path.join(BASE_DIR, 'hsinchu_gov.db')
 
 app = FastAPI(title="Hsinchu Mock API")
 
@@ -19,7 +25,7 @@ class VerifyRequest(BaseModel):
     dob: str
 
 def get_db_connection():
-    conn = sqlite3.connect('hsinchu_gov.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -47,3 +53,8 @@ def verify_citizen(request: VerifyRequest):
         }
     else:
         raise HTTPException(status_code=404, detail="查無此人或身分證與出生日期不符")
+
+# 注意：這裡已經修正了縮排，必須放在最外層才能正確啟動伺服器
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)

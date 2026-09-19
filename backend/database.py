@@ -22,10 +22,10 @@ def init_database():
             id_last4 TEXT NOT NULL,
             birthday_roc TEXT NOT NULL,
             status TEXT NOT NULL,
-            progress_percent INTEGER,         #新增：進度百分比 (例如 50)
-            submitted_at TEXT,               #新增：送件時間 (例如 '2026-03-01 10:00:00')
-            updated_at TEXT,                 #新增：更新時間
-            expected_completed_at TEXT       #新增：預計完成時間
+            progress_percent INTEGER,         
+            submitted_at TEXT,               
+            updated_at TEXT,                 
+            expected_completed_at TEXT      
         )
     """)
 
