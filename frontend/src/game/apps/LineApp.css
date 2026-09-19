@@ -1,55 +1,389 @@
 /* LINE 初始畫面：可捲動的使用者聊天列表。 */
-.phone-page--line { overflow: hidden; background: #fff; }
-.line-app__list-header { color: #fff; background: #06c755; }
-.line-app__list-header .phone-page__back { color: #fff; }
-.line-app__search { display: flex; align-items: center; gap: 7px; margin: 10px 12px; padding: 9px 12px; color: #a1a1aa; border-radius: 8px; background: #f4f4f5; font-size: 12px; }
-.line-app__user-list { height: calc(100% - 64px); overflow-y: auto; overscroll-behavior: contain; }
+.phone-page--line {
+    overflow: hidden;
+    background: #fff;
+}
 
-.line-user { display: grid; grid-template-columns: 48px minmax(0, 1fr) 38px; gap: 10px; align-items: center; width: 100%; padding: 14px 12px; color: #18181b; border: 0; border-bottom: 1px solid #f4f4f5; background: #fff; cursor: pointer; font: inherit; text-align: left; }
-.line-user:hover { background: #f7fef9; }
-.line-user__content { display: grid; min-width: 0; gap: 5px; }
-.line-user__content b { font-size: 15px; }
-.line-user__content span { overflow: hidden; color: #a1a1aa; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.line-user__meta { display: grid; justify-items: end; gap: 6px; color: #a1a1aa; font-size: 10px; }
-.line-user__meta > span { display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; color: #fff; border-radius: 50%; background: #06c755; font-size: 10px; }
+.line-app__list-header {
+    color: #fff;
+    background: #06c755;
+}
+
+.line-app__list-header .phone-page__back {
+    color: #fff;
+}
+
+.line-app__search {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 10px 12px;
+    padding: 9px 12px;
+    color: #a1a1aa;
+    border-radius: 8px;
+    background: #f4f4f5;
+    font-size: 12px;
+}
+
+.line-app__user-list {
+    height: calc(100% - 64px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.line-user {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 38px;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    padding: 14px 12px;
+    color: #18181b;
+    border: 0;
+    border-bottom: 1px solid #f4f4f5;
+    background: #fff;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+}
+
+.line-user:hover {
+    background: #f7fef9;
+}
+
+.line-user__content {
+    display: grid;
+    min-width: 0;
+    gap: 5px;
+}
+
+.line-user__content b {
+    font-size: 15px;
+}
+
+.line-user__content span {
+    overflow: hidden;
+    color: #a1a1aa;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.line-user__meta {
+    display: grid;
+    justify-items: end;
+    gap: 6px;
+    color: #a1a1aa;
+    font-size: 10px;
+}
+
+.line-user__meta>span {
+    display: grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    color: #fff;
+    border-radius: 50%;
+    background: #06c755;
+    font-size: 10px;
+}
 
 /* 頭像圖片與圖片缺失時的文字備援。 */
-.line-avatar { display: block; width: 48px; height: 48px; overflow: hidden; border-radius: 50%; object-fit: cover; }
-.line-avatar--fallback { display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #22c55e, #0f766e); font-size: 18px; font-weight: 700; }
+.line-avatar {
+    display: block;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.line-avatar--fallback {
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: linear-gradient(135deg, #22c55e, #0f766e);
+    font-size: 18px;
+    font-weight: 700;
+}
 
 /* 點進用戶後的詳細對話畫面。 */
-.line-app__chat-header { gap: 8px; color: #fff; background: #06c755; }
-.line-app__chat-header .phone-page__back { min-width: 54px; color: #fff; }
-.line-app__chat-title { display: flex; flex: 1; align-items: center; justify-content: center; gap: 8px; min-width: 0; }
-.line-app__chat-title .line-avatar { width: 30px; height: 30px; font-size: 12px; }
-.line-app__chat-title b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
-.line-app__chat-actions { display: flex; gap: 10px; min-width: 54px; }
-.line-app__message-list { display: grid; gap: 14px; height: calc(100% - 112px); padding: 18px 14px 72px; overflow-y: auto; background: #e8f5ed; }
-.line-message { display: grid; justify-items: start; gap: 4px; }
-.line-message[data-mine="true"] { justify-items: end; }
-.line-message__bubble { max-width: 78%; padding: 9px 11px; border-radius: 14px; background: #fff; box-shadow: 0 1px 1px rgba(0, 0, 0, .08); }
-.line-message[data-mine="true"] .line-message__bubble { background: #b9f4a3; }
-.line-message__bubble p { margin: 0; font-size: 13px; line-height: 1.5; }
-.line-message__meta { display: flex; align-items: end; gap: 5px; color: #71717a; font-size: 10px; }
-.line-message__meta time { white-space: nowrap; }
-.line-message__meta span { color: #06a84d; }
-.line-message__image { display: grid; place-items: center; gap: 6px; min-width: 130px; min-height: 92px; color: #71717a; background: #f4f4f5; font-size: 10px; }
-.line-message__image img { display: block; max-width: 100%; max-height: 190px; object-fit: cover; }
-.line-app__composer { position: absolute; right: 12px; bottom: 14px; left: 12px; display: flex; justify-content: space-between; padding: 11px 14px; color: #a1a1aa; border-radius: 20px; background: #e4e4e7; font-size: 13px; }
+.line-app__chat-header {
+    gap: 8px;
+    color: #fff;
+    background: #06c755;
+}
+
+.line-app__chat-header .phone-page__back {
+    min-width: 54px;
+    color: #fff;
+}
+
+.line-app__chat-title {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.line-app__chat-title .line-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+}
+
+.line-app__chat-title b {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.line-app__chat-actions {
+    display: flex;
+    gap: 10px;
+    min-width: 54px;
+}
+
+.line-app__message-list {
+    display: grid;
+    gap: 14px;
+    height: calc(100% - 132px);
+    padding: 18px 14px 16px;
+    overflow-y: auto;
+    background: #e8f5ed;
+}
+
+.line-message {
+    display: grid;
+    justify-items: start;
+    gap: 4px;
+}
+
+.line-message[data-mine="true"] {
+    justify-items: end;
+}
+
+.line-message__bubble {
+    max-width: 78%;
+    padding: 9px 11px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .08);
+}
+
+.line-message[data-mine="true"] .line-message__bubble {
+    background: #b9f4a3;
+}
+
+.line-message__bubble p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.line-message__meta {
+    display: flex;
+    align-items: end;
+    gap: 5px;
+    color: #71717a;
+    font-size: 10px;
+}
+
+.line-message__meta time {
+    white-space: nowrap;
+}
+
+.line-message__meta span {
+    color: #06a84d;
+}
+
+.line-message__image {
+    display: grid;
+    place-items: center;
+    gap: 6px;
+    min-width: 130px;
+    min-height: 92px;
+    color: #71717a;
+    background: #f4f4f5;
+    font-size: 10px;
+}
+
+.line-message__image img {
+    display: block;
+    max-width: 100%;
+    max-height: 190px;
+    object-fit: cover;
+}
+
+.line-app__composer {
+    position: absolute;
+    right: 10px;
+    bottom: 14px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 58px;
+    padding: 9px 12px;
+    color: #06c755;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 -1px 4px rgba(0, 0, 0, .08);
+}
+
+.line-app__composer button {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: inherit;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.line-app__input {
+    flex: 1;
+    padding: 9px 12px;
+    color: #a1a1aa;
+    border: 1px solid #d4d4d8;
+    border-radius: 18px;
+    background: #fff;
+    font-size: 13px;
+}
 
 /* 日期分隔與可放大的急診室證據圖片。 */
-.line-message-group { display: grid; gap: 4px; }
-.line-message__date { justify-self: center; margin: 5px 0 9px; padding: 4px 9px; color: #71717a; border-radius: 10px; background: rgba(255, 255, 255, .65); font-size: 10px; }
-.line-evidence { display: grid; gap: 7px; width: 170px; padding: 0; overflow: hidden; color: #52525b; border: 0; border-radius: 9px; background: #f4f4f5; cursor: zoom-in; font: inherit; font-size: 10px; text-align: left; }
-.line-evidence img { width: 170px; height: 112px; object-fit: cover; }
-.line-evidence svg { justify-self: center; margin-top: 30px; }
-.line-evidence span { padding: 0 8px 8px; }
-.line-evidence-modal { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 20px; }
-.line-evidence-modal__backdrop { position: absolute; inset: 0; border: 0; background: rgba(0, 0, 0, .72); }
-.line-evidence-modal__content { position: relative; z-index: 1; width: min(100%, 288px); overflow: hidden; border-radius: 14px; background: #fff; box-shadow: 0 16px 40px rgba(0, 0, 0, .45); }
-.line-evidence-modal__content > img, .line-evidence-modal__placeholder { display: grid; place-items: center; width: 100%; height: 210px; object-fit: cover; background: #27272a; color: #fff; }
-.line-evidence-modal__placeholder { gap: 8px; font-size: 11px; }
-.line-evidence-modal__close { position: absolute; top: 8px; right: 8px; z-index: 2; display: grid; place-items: center; width: 30px; height: 30px; padding: 0; color: #fff; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .5); cursor: pointer; }
-.line-evidence-modal__notification { position: absolute; top: 14px; left: 12px; right: 48px; display: grid; gap: 2px; padding: 7px 9px; color: #fff; border-radius: 7px; background: rgba(30, 30, 30, .78); font-size: 10px; backdrop-filter: blur(4px); }
-.line-evidence-modal__notification span { color: #e4e4e7; }
-.line-evidence-modal__content > p { margin: 0; padding: 12px; color: #52525b; font-size: 12px; line-height: 1.5; }
+.line-message-group {
+    display: grid;
+    gap: 4px;
+}
+
+.line-message__date {
+    justify-self: center;
+    margin: 5px 0 9px;
+    padding: 4px 9px;
+    color: #71717a;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .65);
+    font-size: 10px;
+}
+
+.line-evidence {
+    display: grid;
+    gap: 7px;
+    width: 170px;
+    padding: 0;
+    overflow: hidden;
+    color: #52525b;
+    border: 0;
+    border-radius: 9px;
+    background: #f4f4f5;
+    cursor: zoom-in;
+    font: inherit;
+    font-size: 10px;
+    text-align: left;
+}
+
+.line-evidence img {
+    width: 170px;
+    height: 112px;
+    object-fit: cover;
+}
+
+.line-evidence svg {
+    justify-self: center;
+    margin-top: 30px;
+}
+
+.line-evidence span {
+    padding: 0 8px 8px;
+}
+
+.line-evidence-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.line-evidence-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(0, 0, 0, .72);
+}
+
+.line-evidence-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 288px);
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .45);
+}
+
+.line-evidence-modal__content>img,
+.line-evidence-modal__placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    background: #27272a;
+    color: #fff;
+}
+
+.line-evidence-modal__placeholder {
+    gap: 8px;
+    font-size: 11px;
+}
+
+.line-evidence-modal__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    color: #fff;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .5);
+    cursor: pointer;
+}
+
+.line-evidence-modal__notification {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    right: 48px;
+    display: grid;
+    gap: 2px;
+    padding: 7px 9px;
+    color: #fff;
+    border-radius: 7px;
+    background: rgba(30, 30, 30, .78);
+    font-size: 10px;
+    backdrop-filter: blur(4px);
+}
+
+.line-evidence-modal__notification span {
+    color: #e4e4e7;
+}
+
+.line-evidence-modal__content>p {
+    margin: 0;
+    padding: 12px;
+    color: #52525b;
+    font-size: 12px;
+    line-height: 1.5;
+}

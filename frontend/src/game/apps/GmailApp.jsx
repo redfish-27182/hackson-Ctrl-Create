@@ -1,20 +1,69 @@
-import { ChevronLeft, Mail, Star } from 'lucide-react';
+import { ChevronLeft, FileText, Heart, Mail, Search, Star } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import './PhoneAppBase.css';
 import './GmailApp.css';
 
+// Gmail 用戶列表資料：只管理寄件者、主旨、未讀狀態和對應的假頁面圖片。
+const INITIAL_MAILS = [
+    { id: 'heartsync', sender: 'HeartSync AI Report', subject: '您的 AI 戀愛契合度報告已完成', preview: '您與周宇辰的 AI 戀愛契合度為 96%。', time: '21:30', unread: true, icon: Heart, fakeImage:  'project-share.png'},
+    { id: 'project-share', sender: '周宇辰（透過雲端文件）', subject: '「AI 領航青年計畫成功範本」已與您共用', preview: '宇辰已邀請您共同編輯文件。', time: '昨天', unread: true, icon: FileText, fakeImage:  'AI.png'},
+];
+
+// 使用者將完成的假信件畫面放進 GmailFakeImage，並以 fakeImage 同名對應。
+const FAKE_IMAGE_MODULES = import.meta.glob('./GmailFakeImage/*.{png,jpg,jpeg,webp,gif}', { eager: true, import: 'default', query: '?url' });
+const FAKE_IMAGES = Object.fromEntries(Object.entries(FAKE_IMAGE_MODULES).map(([path, url]) => [path.split('/').pop(), url]));
+
 function GmailApp({ onHome }) {
+    const [mails, setMails] = useState(INITIAL_MAILS);
+    const [selectedMailId, setSelectedMailId] = useState(null);
+    const selectedMail = useMemo(() => mails.find((mail) => mail.id === selectedMailId), [mails, selectedMailId]);
+
+    // 開啟信件只清除列表粗體，內容畫面則完全由假頁面圖片提供。
+    const openMail = (mailId) => {
+        setMails((currentMails) => currentMails.map((mail) => (
+            mail.id === mailId ? { ...mail, unread: false } : mail
+        )));
+        setSelectedMailId(mailId);
+    };
+
+    if (selectedMail) {
+        const fakePageImage = FAKE_IMAGES[selectedMail.fakeImage];
+        return (
+            <section className="phone-page phone-page--gmail">
+                <div className="gmail-fake-page">
+                    {fakePageImage ? <img src={fakePageImage} alt={`${selectedMail.subject} 的假郵件頁面`} /> : <div className="gmail-fake-page__placeholder"><Mail size={54} /><b>等待圖片：{selectedMail.fakeImage}</b></div>}
+                    {/* 圖片左上角的小區域可回到 Gmail 列表。 */}
+                    <button className="gmail-fake-page__back" 
+                            type="button" 
+                            aria-label="回到 Gmail 信件列表" 
+                            onClick={() => setSelectedMailId(null)}>
+                            {/* <ChevronLeft size={22} /> */}
+                    </button>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="phone-page phone-page--gmail">
-            {/* 這是獨立的 Gmail 模擬頁，不會離開手機外框。 */}
-            <header className="phone-page__header">
-                <button className="phone-page__back" type="button" onClick={onHome}><ChevronLeft size={20} /> 主畫面</button>
+            <div className="gmail-app__topbar">
+                <button className="gmail-app__home" type="button" onClick={onHome}><ChevronLeft size={20} /></button>
                 <b>Gmail</b>
-                <Mail size={18} />
-            </header>
-            <div className="gmail-app__search">搜尋郵件</div>
-            <div className="gmail-app__mail"><b>2</b><div><strong>系統管理員</strong><span>帳號安全通知</span><small>偵測到新的登入嘗試</small></div><Star size={17} /></div>
-            <div className="gmail-app__mail"><b>1</b><div><strong>雲端服務</strong><span>重要：變更密碼提醒</span><small>請確認此操作是否由您發起</small></div><Star size={17} /></div>
-            <button className="gmail-app__compose" type="button">＋ 撰寫</button>
+                <Mail size={19} />
+            </div>
+            <div className="gmail-app__search" aria-hidden="true"><Search size={16} /><span>搜尋郵件</span></div>
+            <div className="gmail-app__mail-list" aria-label="Gmail 信件列表">
+                {mails.map((mail) => {
+                    const Icon = mail.icon;
+                    return (
+                        <button className="gmail-mail" data-unread={mail.unread} key={mail.id} type="button" onClick={() => openMail(mail.id)}>
+                            <span className="gmail-mail__avatar" data-mail={mail.id}><Icon size={21} /></span>
+                            <div className="gmail-mail__content"><b>{mail.sender}</b><strong>{mail.subject}</strong><span>{mail.preview}</span></div>
+                            <div className="gmail-mail__meta"><time>{mail.time}</time><Star size={18} /></div>
+                        </button>
+                    );
+                })}
+            </div>
         </section>
     );
 }

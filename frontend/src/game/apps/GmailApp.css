@@ -1,9 +1,179 @@
-/* Gmail 的搜尋列、信件清單及浮動撰寫按鍵。 */
-.gmail-app__search { margin: 16px; padding: 11px 15px; color: #71717a; border-radius: 22px; background: #e4e4e7; font-size: 13px; }
-.gmail-app__mail { display: flex; gap: 12px; padding: 15px 18px; border-bottom: 1px solid #e4e4e7; }
-.gmail-app__mail > b { display: grid; place-items: center; width: 22px; height: 22px; color: #fff; border-radius: 50%; background: #ea4335; font-size: 11px; }
-.gmail-app__mail div { display: grid; flex: 1; gap: 3px; min-width: 0; }
-.gmail-app__mail strong, .gmail-app__mail span { font-size: 13px; }
-.gmail-app__mail small { overflow: hidden; color: #71717a; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.gmail-app__mail svg { color: #a1a1aa; }
-.gmail-app__compose { position: absolute; right: 18px; bottom: 22px; padding: 12px 17px; color: #fff; border: 0; border-radius: 24px; background: #ea4335; box-shadow: 0 4px 12px rgba(234, 67, 53, .35); cursor: pointer; }
+/* Gmail 用戶列表：僅呈現兩封郵件的寄件者、主旨與未讀狀態。 */
+.phone-page--gmail {
+    overflow: hidden;
+    background: #fff;
+}
+
+.gmail-app__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    padding: 8px 16px 0;
+    color: #ea4335;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.gmail-app__home {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: inherit;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.gmail-app__search {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 8px 12px;
+    padding: 9px 12px;
+    color: #71717a;
+    border-radius: 8px;
+    background: #f1f3f4;
+    font-size: 12px;
+}
+
+.gmail-app__mail-list {
+    height: calc(100% - 112px);
+    overflow-y: auto;
+}
+
+.gmail-mail {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 36px;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    padding: 14px 12px;
+    color: #202124;
+    border: 0;
+    border-bottom: 1px solid #f1f3f4;
+    background: #fff;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+}
+
+.gmail-mail:hover {
+    background: #f8fafd;
+}
+
+.gmail-mail__avatar {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    color: #fff;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ea4335, #fbbc04);
+}
+
+.gmail-mail__avatar[data-mail="project-share"] {
+    background: linear-gradient(135deg, #4285f4, #34a853);
+}
+
+.gmail-mail__content {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+}
+
+.gmail-mail__content b,
+.gmail-mail__content strong,
+.gmail-mail__content span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gmail-mail__content b {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.gmail-mail__content strong {
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.gmail-mail__content span {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+.gmail-mail__meta {
+    display: grid;
+    justify-items: end;
+    gap: 7px;
+    color: #9ca3af;
+    font-size: 10px;
+}
+
+.gmail-mail__meta svg {
+    fill: transparent;
+}
+
+.gmail-mail[data-unread="true"] .gmail-mail__content b {
+    color: #202124;
+    font-weight: 800;
+}
+
+.gmail-mail[data-unread="true"] .gmail-mail__content strong,
+.gmail-mail[data-unread="true"] .gmail-mail__content span,
+.gmail-mail[data-unread="true"] .gmail-mail__meta time {
+    color: #202124;
+    font-weight: 700;
+}
+
+/* 信件內容由使用者提供的整張假頁面圖片呈現。 */
+.gmail-fake-page {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+}
+
+.gmail-fake-page>img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: top center;
+    background: #fff;
+}
+
+.gmail-fake-page__placeholder {
+    display: grid;
+    place-items: center;
+    gap: 9px;
+    height: 100%;
+    padding: 28px;
+    color: #ea4335;
+    text-align: center;
+}
+
+.gmail-fake-page__placeholder b {
+    font-size: 12px;
+}
+
+.gmail-fake-page__back {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.gmail-fake-page__back:focus-visible {
+    outline: 2px solid #ea4335;
+    background: rgba(255, 255, 255, .7);
+}

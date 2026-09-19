@@ -2,7 +2,7 @@
 .phone-page {
     position: relative;
     z-index: 1;
-    min-height: 100%;
+    height: 100%;
     color: #18181b;
     background: #f8fafc;
 }

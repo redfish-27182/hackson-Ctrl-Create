@@ -1,5 +1,5 @@
-import { ChevronLeft, Image, MessageCircle, Phone, Search, Video, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Camera, ChevronLeft, Image, MessageCircle, Phone, Plus, Search, Video, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './PhoneAppBase.css';
 import './LineApp.css';
 
@@ -59,7 +59,17 @@ function LineApp({ onHome }) {
     const [users, setUsers] = useState(INITIAL_USERS);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [isEvidenceOpen, setIsEvidenceOpen] = useState(false);
+    const messageListRef = useRef(null);
     const selectedUser = useMemo(() => users.find((user) => user.id === selectedUserId), [selectedUserId, users]);
+
+    // 進入聊天室後先停在最新訊息，玩家可向上滑動查看先前紀錄。
+    useEffect(() => {
+        if (!selectedUserId || !messageListRef.current) return undefined;
+        const timeoutId = window.setTimeout(() => {
+            messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+        }, 0);
+        return () => window.clearTimeout(timeoutId);
+    }, [selectedUserId]);
 
     const openConversation = (userId) => {
         setUsers((currentUsers) => currentUsers.map((user) => (
@@ -78,7 +88,7 @@ function LineApp({ onHome }) {
                     <div className="line-app__chat-title"><LineAvatar image={selectedUser.image} name={selectedUser.name} /><b>{selectedUser.name}</b></div>
                     <span className="line-app__chat-actions"><Phone size={17} /><Video size={17} /></span>
                 </header>
-                <div className="line-app__message-list">
+                <div className="line-app__message-list" ref={messageListRef}>
                     {messages.map((message) => {
                         const showDate = message.date !== previousDate;
                         previousDate = message.date;
@@ -96,7 +106,12 @@ function LineApp({ onHome }) {
                         );
                     })}
                 </div>
-                <div className="line-app__composer">輸入訊息… <span>＋</span></div>
+                <div className="line-app__composer" aria-label="傳送訊息工具列">
+                    <button type="button" aria-label="更多功能"><Plus size={20} /></button>
+                    <button type="button" aria-label="拍照"><Camera size={20} /></button>
+                    <button type="button" aria-label="選擇圖片"><Image size={20} /></button>
+                    <div className="line-app__input" aria-label="訊息輸入框">Aa</div>
+                </div>
 
                 {isEvidenceOpen && (
                     <div className="line-evidence-modal" role="dialog" aria-modal="true" aria-label="急診室照片線索">

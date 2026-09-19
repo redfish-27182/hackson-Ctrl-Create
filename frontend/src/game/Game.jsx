@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PixelTypewriter from './PixelTypewriter';
 import PhoneSimulator from './PhoneSimulator';
+import GameNarration from './GameNarration';
 import './Game.css';
 
 const PROLOGUE = [
-    '城市的網路防線正遭受未知入侵。',
-    '你收到一封沒有署名的求救訊息。',
-    '找出破口，阻止攻擊擴散。',
+    '安晴從昨晚開始失去聯絡。',
+    '她的帳戶在失聯前，分兩次匯出了五萬元。',
+    '房間裡只留下這支手機，以及幾段可疑的對話。',
+    '請找出「周宇辰」的真實身分，還原安晴遭遇的一切。',
 ];
 
 function CybersecurityGame() {
     const [isPrologueComplete, setIsPrologueComplete] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
+    const [narrationStage, setNarrationStage] = useState(null);
 
     return (
         <main className="cyber-game">
@@ -30,15 +33,24 @@ function CybersecurityGame() {
                         <button
                             className="game-prologue__next"
                             type="button"
-                            onClick={() => setHasStarted(true)}
+                            onClick={() => {
+                                setHasStarted(true);
+                                setNarrationStage('phone-intro');
+                            }}
                         >
-                            下一步 →
+                            調查開始
                         </button>
                     )}
                 </section>
             ) : (
                 <div className="game-phone-stage">
-                    <PhoneSimulator />
+                    <div className="game-phone-shell">
+                        <PhoneSimulator />
+                        <GameNarration
+                            stageId={narrationStage}
+                            onComplete={() => setNarrationStage(null)}
+                        />
+                    </div>
                 </div>
             )}
         </main>
