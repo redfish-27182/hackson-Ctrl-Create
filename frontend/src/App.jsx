@@ -10,11 +10,13 @@ import AIChatModal from './components/chat/AIChatModal';
 import CybersecurityGame from './game/Game';
 import ApplyPage from './components/ApplyPage';
 
-// 前端自動以目前網址主機 (如 localhost) 連至後端 5000 port
+// 連接後端伺服器 (若在 Vercel 則連至 ngrok，本機則連至 localhost:5001)
 export const BACKEND_URL =
-    typeof window !== 'undefined' && window.location.hostname
-        ? `http://${window.location.hostname}:5000`
-        : 'http://localhost:5000';
+    import.meta.env.VITE_BACKEND_URL ||
+    (typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:5001'
+        : 'https://dismantle-upstage-crowd.ngrok-free.dev');
 
 // HomePage component: 顯示首頁內容，包括 HeroCarousel 和服務介紹
 function HomePage() {

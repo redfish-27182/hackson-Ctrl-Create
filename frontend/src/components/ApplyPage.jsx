@@ -43,7 +43,7 @@ function ApplyPage() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
-        const lineUserId = searchParams.get('line_user_id');
+        let lineUserId = searchParams.get('line_user_id');
 
         // 規則 3: 如果是從官網進去 (無 line_user_id)，就沒有預先填入的資料
         if (!lineUserId) {
@@ -51,12 +51,20 @@ function ApplyPage() {
             return;
         }
 
+        try {
+            lineUserId = decodeURIComponent(lineUserId);
+        } catch (e) {
+            // keep raw
+        }
+
         // 規則 2: 當從 Line 過去，要從 DB 去抓對應資料並自動填入
         setIsFromLine(true);
         setIsLoading(true);
 
         axios
-            .get(`${BACKEND_URL}/api/applications/by-line/${encodeURIComponent(lineUserId)}`)
+            .get(`${BACKEND_URL}/api/applications/by-line/${encodeURIComponent(lineUserId)}`, {
+                headers: { 'ngrok-skip-browser-warning': 'true' },
+            })
             .then((response) => {
                 const data = response.data;
                 setApplicationId(data.application_id || '');

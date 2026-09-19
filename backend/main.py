@@ -104,7 +104,7 @@ init_database()
 
 CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://hackson-ctrl-create.vercel.app")
 
 
 if not CHANNEL_SECRET:
@@ -140,9 +140,30 @@ def home():
     return "Ctrl & Create LINE Bot is running!"
 
 
-@app.route("/api/applications/by-line/<line_user_id>", methods=["GET"])
+def decode_line_user_id(user_id_str):
+    """解碼可能被 URL 或 Base64 編碼的 LINE user_id"""
+    if not user_id_str:
+        return user_id_str
+    import base64
+    from urllib.parse import unquote
+
+    # 1. URL 解碼
+    decoded = unquote(user_id_str).strip()
+    # 2. 若有 Base64 編碼則解碼還原
+    try:
+        padded = decoded + "=" * (-len(decoded) % 4)
+        b64 = base64.urlsafe_b64decode(padded.encode("utf-8")).decode("utf-8")
+        if b64.startswith("U"):
+            return b64
+    except Exception:
+        pass
+    return decoded
+
+
+@app.route("/api/applications/by-line/<path:line_user_id>", methods=["GET"])
 def application_by_line_user(line_user_id):
-    application = find_application_by_line_user(line_user_id)
+    clean_user_id = decode_line_user_id(line_user_id)
+    application = find_application_by_line_user(clean_user_id)
 
     if application is None:
         return jsonify({"error": "找不到此 LINE 帳號的案件綁定"}), 404
