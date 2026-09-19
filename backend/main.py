@@ -1,6 +1,7 @@
 import os
 import sys
 import sqlite3
+import requests
 from pathlib import Path
 
 # =========================================================
@@ -70,7 +71,76 @@ ENV_PATH = BASE_DIR / ".env"
 load_dotenv(ENV_PATH)
 
 app = Flask(__name__)
+# =========================================================
+# 新竹市政府 Mock API 串接設定 (Hackathon Demo)
+# =========================================================
+# 假設你的 FastAPI 跑在同台機器的 8000 port
+HSINCHU_GOV_API_URL = "http://127.0.0.1:8000/api/verify"
 
+def verify_citizen_from_gov(id_number, dob):
+    """
+    向新竹市政府 Mock API 發送請求核對身分
+    成功回傳: (True, {phone, registered_address, mailing_address})
+    失敗回傳: (False, 錯誤訊息字串)
+    """
+    try:
+        response = requests.post(
+            HSINCHU_GOV_API_URL,
+            json={
+                "id_number": id_number,
+                "dob": dob
+            },
+            timeout=5 # 設定 5 秒 timeout 防止卡死
+        )
+        
+        # 狀態碼 200 代表驗證成功
+        if response.status_code == 200:
+            data = response.json()
+            return True, data.get("data")
+        else:
+            # 取得 404 或其他錯誤訊息
+            error_msg = response.json().get("detail", "身分驗證失敗")
+            return False, error_msg
+            
+    except requests.exceptions.RequestException as e:
+        print(f"[API Error] 無法連線至新竹市政府系統: {e}")
+        return False, "無法連線至新竹市政府系統，請稍後再試"
+
+
+# =========================================================
+# 提供給前端網頁的身分驗證 API
+#
+# 使用方式：POST /api/verify_citizen
+# Body (JSON): { "id_number": "O123456789", "dob": "民國89年05月20日" }
+# =========================================================
+@app.route("/api/verify_citizen", methods=["POST"])
+def api_verify_citizen():
+    # 接收前端傳來的 JSON 資料
+    data = request.get_json()
+    
+    if not data or "id_number" not in data or "dob" not in data:
+        return jsonify({
+            "error": "請提供完整的身分證字號 (id_number) 與出生日期 (dob)"
+        }), 400
+
+    id_number = data["id_number"].strip()
+    dob = data["dob"].strip()
+
+    # 呼叫剛才寫好的函式去問市政府的 API
+    is_valid, result = verify_citizen_from_gov(id_number, dob)
+
+    if is_valid:
+        # 驗證成功，將政府回傳的個資 (電話、地址) 回傳給前端帶入表單
+        return jsonify({
+            "status": "success",
+            "message": "身分驗證成功",
+            "data": result
+        }), 200
+    else:
+        # 驗證失敗 (查無此人等)
+        return jsonify({
+            "error": result
+        }), 404
 # =========================================================
 # AI 客服狀態
 # =========================================================
