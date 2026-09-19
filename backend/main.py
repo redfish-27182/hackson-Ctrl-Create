@@ -1,7 +1,6 @@
 import os
 import sys
 import sqlite3
-import requests
 from pathlib import Path
 
 # =========================================================
@@ -29,7 +28,7 @@ from database import (
     init_database,
     find_application,
     bind_line_user,
-    find_application_by_line_user,
+    find_application_by_name,
 )
 
 
@@ -54,11 +53,13 @@ from linebot.v3.messaging import (
     MessagingApi,
     ReplyMessageRequest,
     TextMessage,
+    MessagingApiBlob,
 )
 
 from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent,
+    ImageMessageContent,
 )
 
 
@@ -71,83 +72,6 @@ ENV_PATH = BASE_DIR / ".env"
 load_dotenv(ENV_PATH)
 
 app = Flask(__name__)
-# =========================================================
-# 新竹市政府 Mock API 串接設定 (Hackathon Demo)
-# =========================================================
-# 假設你的 FastAPI 跑在同台機器的 8000 port
-HSINCHU_GOV_API_URL = "http://127.0.0.1:8000/api/verify"
-
-def verify_citizen_from_gov(id_number, dob):
-    """
-    向新竹市政府 Mock API 發送請求核對身分
-    成功回傳: (True, {phone, registered_address, mailing_address})
-    失敗回傳: (False, 錯誤訊息字串)
-    """
-    try:
-        response = requests.post(
-            HSINCHU_GOV_API_URL,
-            json={
-                "id_number": id_number,
-                "dob": dob
-            },
-            timeout=5 # 設定 5 秒 timeout 防止卡死
-        )
-        
-        # 狀態碼 200 代表驗證成功
-        if response.status_code == 200:
-            data = response.json()
-            return True, data.get("data")
-        else:
-            # 取得 404 或其他錯誤訊息
-            error_msg = response.json().get("detail", "身分驗證失敗")
-            return False, error_msg
-            
-    except requests.exceptions.RequestException as e:
-        print(f"[API Error] 無法連線至新竹市政府系統: {e}")
-        return False, "無法連線至新竹市政府系統，請稍後再試"
-
-
-# =========================================================
-# 提供給前端網頁的身分驗證 API
-#
-# 使用方式：POST /api/verify_citizen
-# Body (JSON): { "id_number": "O123456789", "dob": "民國89年05月20日" }
-# =========================================================
-@app.route("/api/verify_citizen", methods=["POST"])
-def api_verify_citizen():
-    # 接收前端傳來的 JSON 資料
-    data = request.get_json()
-    
-    if not data or "id_number" not in data or "dob" not in data:
-        return jsonify({
-            "error": "請提供完整的身分證字號 (id_number) 與出生日期 (dob)"
-        }), 400
-
-    id_number = data["id_number"].strip()
-    dob = data["dob"].strip()
-
-    # 呼叫剛才寫好的函式去問市政府的 API
-    is_valid, result = verify_citizen_from_gov(id_number, dob)
-
-    if is_valid:
-        # 驗證成功，將政府回傳的個資 (電話、地址) 回傳給前端帶入表單
-        return jsonify({
-            "status": "success",
-            "message": "身分驗證成功",
-            "data": result
-        }), 200
-    else:
-        # 驗證失敗 (查無此人等)
-        return jsonify({
-            "error": result
-        }), 404
-# =========================================================
-# AI 客服狀態
-# =========================================================
-# ai_chat_users：目前已進入「其他 / AI 智慧客服」模式的 LINE 使用者
-# ai_chat_history：保存每位使用者最近幾輪對話，讓 Gemini 可以理解追問
-ai_chat_users = set()
-ai_chat_history = {}
 
 # =========================================================
 # AI 客服狀態
@@ -156,14 +80,6 @@ ai_chat_history = {}
 # ai_chat_history：保存每位使用者最近幾輪對話，讓 Gemini 可以理解追問
 ai_chat_users = set()
 ai_chat_history = {}
-
-
-@app.after_request
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-    return response
 
 init_database()
 
@@ -174,7 +90,6 @@ init_database()
 
 CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 
 if not CHANNEL_SECRET:
@@ -394,23 +309,26 @@ def callback():
 
     for event in events:
 
-        # 只處理 MessageEvent
+    # 只處理 MessageEvent
         if not isinstance(
-            event,
-            MessageEvent
-        ):
+        event,
+        MessageEvent
+    ):
             continue
 
+    # 文字訊息
+        if isinstance(
+        event.message,
+        TextMessageContent
+    ):
+            handle_text_message(event)
 
-        # 只處理文字訊息
-        if not isinstance(
-            event.message,
-            TextMessageContent
-        ):
-            continue
-
-
-        handle_text_message(event)
+    # 圖片訊息
+        elif isinstance(
+        event.message,
+        ImageMessageContent
+    ):
+            handle_image_message(event)
 
 
     return "OK"
@@ -419,7 +337,126 @@ def callback():
 # =========================================================
 # 5. 訊息處理
 # =========================================================
+import json
+# =========================================================
+# 圖片帳單處理
+# =========================================================
 
+def handle_image_message(event):
+
+    print("[LINE] 收到圖片訊息")
+
+    try:
+
+        # -------------------------------------------------
+        # 1. 下載 LINE 使用者傳來的圖片
+        # -------------------------------------------------
+
+        message_id = event.message.id
+
+        upload_dir = (
+            Path(__file__).resolve().parent
+            / "uploads"
+        )
+
+        upload_dir.mkdir(
+            exist_ok=True
+        )
+
+        image_path = (
+            upload_dir
+            / f"{message_id}.jpg"
+        )
+
+        with ApiClient(
+            configuration
+        ) as api_client:
+
+            blob_api = MessagingApiBlob(
+                api_client
+            )
+
+            image_content = (
+                blob_api.get_message_content(
+                    message_id=message_id
+                )
+            )
+
+        with open(
+            image_path,
+            "wb"
+        ) as f:
+
+            f.write(
+                image_content
+            )
+
+        print(
+            f"[IMAGE] 圖片已儲存：{image_path}"
+        )
+
+
+        # -------------------------------------------------
+        # 2. DEMO 第一版：
+        #    先假裝圖片辨識已經完成
+        # -------------------------------------------------
+
+        fake_receipt_path = (
+            Path(__file__).resolve().parent
+            / "fake_receipt.json"
+        )
+
+        with open(
+            fake_receipt_path,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            receipt = json.load(f)
+
+
+        # -------------------------------------------------
+        # 3. 跑補助審核
+        # -------------------------------------------------
+
+        from subsidy_checker import (
+            check_subsidy,
+            format_line_message,
+        )
+
+        result = check_subsidy(
+            receipt
+        )
+
+        reply_text = format_line_message(
+            receipt,
+            result
+        )
+
+
+        # -------------------------------------------------
+        # 4. 回覆 LINE
+        # -------------------------------------------------
+
+        send_reply(
+            event,
+            reply_text
+        )
+
+
+    except Exception as e:
+
+        print(
+            f"[IMAGE ERROR] {e}"
+        )
+
+        send_reply(
+            event,
+            (
+                "⚠️ 帳單圖片處理失敗\n\n"
+                "請稍後再試一次。"
+            )
+        )
 def handle_text_message(event):
 
     user_message = event.message.text.strip()
@@ -702,16 +739,10 @@ def handle_text_message(event):
 
     if user_message in web_menu_messages:
 
-        if user_message == "一鍵申請":
-            line_user_id = event.source.user_id
-            apply_url = f"{FRONTEND_URL}/apply?line_user_id={line_user_id}"
-            reply_text = f"請點擊以下連結開始申請：\n{apply_url}"
-            send_reply(event, reply_text)
-        else:
-            print(
-                f"[LINE] {user_message} "
-                "預計改成 URI 網頁按鈕"
-            )
+        print(
+            f"[LINE] {user_message} "
+            "預計改成 URI 網頁按鈕"
+        )
 
         return
 
@@ -762,8 +793,6 @@ def handle_text_message(event):
             "👤 申請資格\n"
 
             "💰 補助金額\n"
-
-            "🤖 可補助工具\n"
 
             "📝 申請流程\n"
 
@@ -1106,7 +1135,7 @@ def get_application():
         }), 400
 
 
-    application = find_application_by_line_user(
+    application = find_application_by_name(
         name
     )
 
