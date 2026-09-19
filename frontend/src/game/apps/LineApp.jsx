@@ -4,9 +4,15 @@ import './PhoneAppBase.css';
 import './LineApp.css';
 
 const INITIAL_USERS = [
+    { id: 'xiao-wen',     image: 'xiao-wen.png',    name: '小文',     latestMessage: '那個人可能就是你。',     time: '18:15', unreadCount: 2 },
+    { id: 'ya-ting',      image: 'ya-ting.jpg',     name: '雅婷',     latestMessage: '週末要不要一起吃飯？',     time: '16:42', unreadCount: 3 },
+    { id: 'government',   image: 'Government.jpg',  name: 'AI領航青年數位工具',   latestMessage: '🔗 帳號綁定: 為了讓您之後可以快速查詢申請進度，請先完成身分綁定。', time: '昨天',  unreadCount: 1 },
     { id: 'zhou-yu-chen', image: 'zhou-yuchen.png', name: '周宇辰❤️', latestMessage: '周宇辰收回了一則訊息。', time: '21:18', unreadCount: 1 },
-    { id: 'xiao-wen', image: 'xiao-wen.png', name: '小文', latestMessage: '那個人可能就是你。', time: '18:15', unreadCount: 0 },
-];
+    { id: 'dad',          image: 'dad.jpg',              name: '爸爸',     latestMessage: '到家記得說一聲',           time: '昨天',  unreadCount: 0 },
+    { id: 'hui-ling',     image: null,              name: '惠玲',     latestMessage: '照片我晚點傳給你',         time: '星期三', unreadCount: 0 },
+    { id: 'landlord-lin', image: null,              name: '林先生',   latestMessage: '這個月房租已收到',         time: '星期二', unreadCount: 0 },
+    { id: 'kevin',        image: null,              name: 'Kevin',    latestMessage: '哈哈沒問題',               time: '星期一', unreadCount: 0 },
+ ];
 
 // 周宇辰的劇情對話。isMine 為 true 表示安晴傳送；revoked 表示可點擊查看的收回訊息。
 const CONVERSATIONS = {
@@ -43,7 +49,36 @@ const CONVERSATIONS = {
         { id: 'z30', date: '7月2日 22:03｜HeartSync戀愛測驗', text: '當然啊，我自己也用了。\n只是戀愛測驗，不會怎樣啦。', isMine: false, time: '22:06' },
     ],
     'xiao-wen': [
-        { id: 'w1', date: '7月4日', text: '那個人可能就是你。', isMine: false, time: '18:15' },
+        { id: 'w1', date: '7月4日 17:42｜你還好嗎？', text: '安晴，你現在方便講話嗎？', isMine: false, time: '17:42' },
+        { id: 'w2', date: '7月4日 17:42｜你還好嗎？', text: '怎麼了？我剛下班。', isMine: true, time: '17:43', read: true },
+        { id: 'w3', date: '7月4日 17:42｜你還好嗎？', text: '我不是要嚇你，但我剛剛在咖啡廳看到一個很像周宇辰的人。', isMine: false, time: '17:43' },
+        { id: 'w4', date: '7月4日 17:42｜你還好嗎？', text: '他不是說今天要陪媽媽回診嗎？', isMine: true, time: '17:44', read: true },
+        { id: 'w5', date: '7月4日 17:42｜你還好嗎？', text: '對，所以我才覺得怪。旁邊還坐了一個女生。', isMine: false, time: '17:44' },
+        { id: 'w6', date: '7月4日 17:42｜你還好嗎？', text: '也許只是朋友吧。', isMine: true, time: '17:45', read: true },
+        { id: 'w7', date: '7月4日 17:42｜你還好嗎？', text: '拜託，你每次都先幫他找理由。', isMine: false, time: '17:45' },
+        { id: 'w8', date: '7月4日 17:42｜你還好嗎？', text: '我沒有啦……只是還沒搞清楚。', isMine: true, time: '17:46', read: true },
+        { id: 'w9', date: '7月4日 17:42｜你還好嗎？', text: '我知道。可是你這幾天明明都怪怪的，訊息也一直盯著看。', isMine: false, time: '17:46' },
+        { id: 'w10', date: '7月4日 17:42｜你還好嗎？', text: '他最近真的很忙。', isMine: true, time: '17:47', read: true },
+        { id: 'w11', date: '7月4日 17:42｜你還好嗎？', text: '忙到連一句晚安都沒有，卻有空發限動？小妞，這題我會。', isMine: false, time: '17:48' },
+        { id: 'w12', date: '7月4日 17:42｜你還好嗎？', text: '你不要用那個語氣啦。', isMine: true, time: '17:48', read: true },
+        { id: 'w13', date: '7月4日 17:42｜你還好嗎？', text: '好好好，我收斂。但你答應我，不要一個人亂想。', isMine: false, time: '17:49' },
+        { id: 'w14', date: '7月4日 17:42｜你還好嗎？', text: '嗯。', isMine: true, time: '17:49', read: true },
+        { id: 'w15', date: '7月4日 17:42｜你還好嗎？', text: '要不要我現在過去找你？我可以帶鹹酥雞，還有你愛喝的無糖青。', isMine: false, time: '17:50' },
+        { id: 'w16', date: '7月4日 17:42｜你還好嗎？', text: '你不是晚上要跟家人吃飯？', isMine: true, time: '17:51', read: true },
+        { id: 'w17', date: '7月4日 17:42｜你還好嗎？', text: '家人每天都能見，你失戀預備役比較急。', isMine: false, time: '17:51' },
+        { id: 'w18', date: '7月4日 17:42｜你還好嗎？', text: '誰失戀預備役……', isMine: true, time: '17:52', read: true },
+        { id: 'w19', date: '7月4日 17:42｜你還好嗎？', text: '好，不說這個。反正不管發生什麼，我都站你這邊。', isMine: false, time: '17:52' },
+        { id: 'w20', date: '7月4日 17:42｜你還好嗎？', text: '謝謝你，小文。', isMine: true, time: '17:53', read: true },
+        { id: 'w21', date: '7月4日 18:08｜一張照片', text: '等一下，我剛剛整理照片時發現這張。', isMine: false, time: '18:08' },
+        { id: 'w22', date: '7月4日 18:08｜一張照片', text: '你傳了什麼？', isMine: true, time: '18:09', read: true },
+        { id: 'w23', date: '7月4日 18:08｜一張照片', text: '我沒有拍到正臉，但你自己看外套跟手錶，是不是很像他？', isMine: false, time: '18:10' },
+        { id: 'w24', date: '7月4日 18:08｜一張照片', text: '……好像真的是。', isMine: true, time: '18:11', read: true },
+        { id: 'w25', date: '7月4日 18:08｜一張照片', text: '先別衝去問他，深呼吸。你想怎麼做我都陪你。', isMine: false, time: '18:11' },
+        { id: 'w26', date: '7月4日 18:08｜一張照片', text: '我想先問清楚。', isMine: true, time: '18:12', read: true },
+        { id: 'w27', date: '7月4日 18:08｜一張照片', text: '可以，但不要被他三兩句就哄過去。把你在意的事講完。', isMine: false, time: '18:12' },
+        { id: 'w28', date: '7月4日 18:08｜一張照片', text: '好。', isMine: true, time: '18:13', read: true },
+        { id: 'w29', date: '7月4日 18:08｜一張照片', text: '還有，今天晚上手機不要靜音。我會等你回報。', isMine: false, time: '18:14' },
+        { id: 'w30', date: '7月4日 18:08｜一張照片', text: '那個人可能就是你。', isMine: false, time: '18:15' },
     ],
 };
 
