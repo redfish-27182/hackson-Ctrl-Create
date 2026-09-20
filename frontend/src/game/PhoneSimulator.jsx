@@ -106,11 +106,15 @@ function PhoneSimulator({ guideStep = null, onGuideStepChange, onGuideComplete }
                 onGuideStepChange?.(null);
                 window.setTimeout(() => onGuideStepChange?.('gmail-heartsync-image-bottom'), 20);
             },
+            onMaterialsRiskOpen: (materialType) => {
+                onGuideStepChange?.(null);
+                window.setTimeout(() => onGuideStepChange?.(`heartsync-materials-${materialType}`), 20);
+            },
             onCloseHeartSync: () => setCurrentScreen('LINE'),
         };
         if (currentScreen === 'LINE') return <LineApp {...pageProps} />;
         if (currentScreen === 'GMAIL') return <GmailApp {...pageProps} />;
-        if (currentScreen === 'HEARTSYNC') return <HeartSyncPhishingPage onClose={pageProps.onCloseHeartSync} />;
+        if (currentScreen === 'HEARTSYNC') return <HeartSyncPhishingPage onClose={pageProps.onCloseHeartSync} onMaterialsRiskOpen={pageProps.onMaterialsRiskOpen} />;
         if (currentScreen === 'FILES') return <FilesApp {...pageProps} />;
         if (currentScreen === 'NOTES') return <NotesApp {...pageProps} />;
 

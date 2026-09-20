@@ -29,6 +29,12 @@ export const NARRATION_STAGES = [
         lines: ['一封看似正常的郵件，可能藏著資料遭濫用的證據。'],
         actionLabel: '查看郵件',
     },
+    {
+        id: 'heartsync-materials-clue',
+        label: 'SYSTEM LOG // 04',
+        lines: ['你找到了第三個資訊漏洞：網站以戀愛分析為名蒐集自拍照與語音樣本。這些生物特徵一旦外流，可能被用於深偽造、聲紋冒用與詐騙。接下來，繼續找出它還要求了哪些不必要的權限。'],
+        actionLabel: '繼續',
+    },
 ];
 
 function GameNarration({ stageId, onComplete, lineDelay = 850 }) {

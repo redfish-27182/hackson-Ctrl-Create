@@ -59,7 +59,7 @@ const PERMISSIONS = [
     { title: '聊天紀錄', tag: '精準構成', description: '深度語意理解情感頻率與價值觀共鳴', icon: Database },
 ];
 
-function HeartSyncPhishingPage({ onClose }) {
+function HeartSyncPhishingPage({ onClose, onMaterialsRiskOpen }) {
     const [screen, setScreen] = useState('dashboard');
     const stepIndex = FLOW_STEPS.indexOf(screen) + 1;
 
@@ -73,7 +73,7 @@ function HeartSyncPhishingPage({ onClose }) {
             <SiteHeader screen={screen} onClose={onClose} />
             {screen === 'dashboard' && <Dashboard onStart={() => setScreen('profile')} />}
             {screen === 'profile' && <ProfileStep stepIndex={stepIndex} onNext={goNext} />}
-            {screen === 'materials' && <MaterialsStep stepIndex={stepIndex} onNext={goNext} />}
+            {screen === 'materials' && <MaterialsStep stepIndex={stepIndex} onNext={goNext} onMaterialsRiskOpen={onMaterialsRiskOpen} />}
             {screen === 'permissions' && <PermissionsStep stepIndex={stepIndex} onNext={goNext} />}
             {screen === 'result' && <ResultStep stepIndex={stepIndex} />}
         </section>
@@ -231,7 +231,7 @@ function ProfileStep({ stepIndex, onNext }) {
     );
 }
 
-function MaterialsStep({ stepIndex, onNext }) {
+function MaterialsStep({ stepIndex, onNext, onMaterialsRiskOpen }) {
     return (
         <StepFrame
             stepIndex={stepIndex}
@@ -251,7 +251,7 @@ function MaterialsStep({ stepIndex, onNext }) {
                     <span />
                     <p>AI 將辨識表情與臉部輪廓</p>
                 </div>
-                <button className="heart-sync-phishing__secondary-button" type="button">上傳一張清楚的正面照片</button>
+                <button className="heart-sync-phishing__secondary-button" data-guide="heartsync-selfie" type="button" onClick={() => onMaterialsRiskOpen?.('photo')}>上傳一張清楚的正面照片</button>
             </article>
 
             <article className="heart-sync-phishing__upload-card">
@@ -264,7 +264,7 @@ function MaterialsStep({ stepIndex, onNext }) {
                         <span key={index} style={{ height: `${12 + (index % 5) * 6}px` }} />
                     ))}
                 </div>
-                <button className="heart-sync-phishing__secondary-button" type="button">開始錄音</button>
+                <button className="heart-sync-phishing__secondary-button" data-guide="heartsync-voice-sample" type="button" onClick={() => onMaterialsRiskOpen?.('voice')}>開始錄音</button>
             </article>
         </StepFrame>
     );

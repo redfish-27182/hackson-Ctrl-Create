@@ -49,13 +49,15 @@ function CybersecurityGame() {
                             guideStep={guideStep}
                             onGuideStepChange={setGuideStep}
                             onGuideComplete={(completedStep) => {
+                                setGuideStep(null);
                                 if (completedStep === 'line-id-card-photos') {
-                                    setGuideStep(null);
                                     setNarrationStage('line-clue');
                                 }
                                 if (completedStep === 'gmail-heartsync-image-bottom') {
-                                    setGuideStep(null);
                                     setNarrationStage('gmail-clue');
+                                }
+                                if (completedStep === 'heartsync-materials-photo' || completedStep === 'heartsync-materials-voice') {
+                                    setNarrationStage('heartsync-materials-clue');
                                 }
                             }}
                         />

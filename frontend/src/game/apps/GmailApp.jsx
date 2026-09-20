@@ -7,6 +7,11 @@ import './GmailApp.css';
 const INITIAL_MAILS = [
     { id: 'heartsync', sender: 'HeartSync AI Report', subject: '您的 AI 戀愛契合度報告已完成', preview: '您與周宇辰的 AI 戀愛契合度為 96%。', time: '21:30', unread: true, icon: Heart, fakeImage:  'project-share.png'},
     { id: 'project-share', sender: '周宇辰（透過雲端文件）', subject: '「AI 領航青年計畫成功範本」已與您共用', preview: '宇辰已邀請您共同編輯文件。', time: '昨天', unread: true, icon: FileText, fakeImage:  'AI.png'},
+    { id: 'course-reminder', sender: '數位學習平台', subject: '課程提醒：資安基礎測驗即將截止', preview: '請於本週五前完成線上測驗。', time: '昨天', unread: false, icon: Mail, fakeImage: 'AI.png' },
+    { id: 'cloud-storage', sender: 'Cloud Drive', subject: '你的雲端空間使用量通知', preview: '目前已使用 72% 的儲存空間。', time: '星期三', unread: false, icon: FileText, fakeImage: 'project-share.png' },
+    { id: 'newsletter', sender: '城市生活週報', subject: '本週末活動精選', preview: '展覽、市集與音樂活動整理給你。', time: '星期二', unread: false, icon: Mail, fakeImage: 'AI.png' },
+    { id: 'bank-notice', sender: '銀行帳務通知', subject: '本月信用卡帳單已產生', preview: '請於繳款截止日前確認帳單明細。', time: '星期一', unread: false, icon: Mail, fakeImage: 'project-share.png' },
+    { id: 'shopping', sender: '購物平台', subject: '你收藏的商品正在限時優惠', preview: '部分商品即將恢復原價，快去看看。', time: '上週', unread: false, icon: Mail, fakeImage: 'AI.png' },
 ];
 
 // 使用者將完成的假信件畫面放進 GmailFakeImage，並以 fakeImage 同名對應。

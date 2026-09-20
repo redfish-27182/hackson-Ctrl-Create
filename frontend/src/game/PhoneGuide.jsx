@@ -47,6 +47,24 @@ const GUIDE_STEPS = {
         disableActiveInteraction: false,
         advanceOnClick: true,
     },
+    'heartsync-materials-photo': {
+        allowClose: true,
+        showButtons: ['previous', 'next', 'close'],
+        disableActiveInteraction: true,
+        steps: [
+            { element: '[data-guide="heartsync-selfie"]', title: '自拍照也是生物特徵資料', description: '臉部影像可能被用於冒用身分、深偽造，或與其他資料交叉追蹤；不應輕易交給來源不明的服務。', side: 'top' },
+            { element: '[data-guide="heartsync-voice-sample"]', title: '語音樣本可被複製聲紋', description: '短語音也可能被拿來建立聲紋或合成聲音，進而用於詐騙親友與繞過語音驗證。', side: 'top' },
+        ],
+    },
+    'heartsync-materials-voice': {
+        allowClose: true,
+        showButtons: ['previous', 'next', 'close'],
+        disableActiveInteraction: true,
+        steps: [
+            { element: '[data-guide="heartsync-voice-sample"]', title: '語音樣本可被複製聲紋', description: '短語音也可能被拿來建立聲紋或合成聲音，進而用於詐騙親友與繞過語音驗證。', side: 'top' },
+            { element: '[data-guide="heartsync-selfie"]', title: '自拍照也是生物特徵資料', description: '臉部影像可能被用於冒用身分、深偽造，或與其他資料交叉追蹤；不應輕易交給來源不明的服務。', side: 'top' },
+        ],
+    },
 };
 
 function PhoneGuide({ step, onComplete }) {
