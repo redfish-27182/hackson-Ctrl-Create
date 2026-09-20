@@ -1,182 +1,440 @@
+/* =========================================================
+   SearchPage.css
+   比照 ApplyPage 的風格：白底公文卡片、政府公版表格與細緻視覺
+   ========================================================= */
 
-/* 搜尋頁面主容器：垂直置中並限制內容寬度。 */
-.search-page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: min(100% - 48px, 620px);
-  min-height: calc(100vh - 160px);
-  margin: 0 auto;
-  padding: 64px 0 88px;
+.search-container {
+    max-width: 900px;
+    margin: 30px auto 60px;
+    padding: 32px 40px;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+    color: #222;
 }
 
-/* 頁面標題與搜尋輸入區。 */
-.title {
-  margin: 0 0 30px;
-  color: var(--paper);
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 500;
-  line-height: 1.3;
-  letter-spacing: 0.1em;
-  text-align: center;
+/* 標題區 */
+.search-header-area {
+    margin-bottom: 24px;
 }
 
-.search-bar {
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  background: #171a1c;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+.search-page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+    letter-spacing: 0.05em;
 }
 
-.search-input {
-  flex: 1;
-  min-width: 0;
-  padding: 14px 16px;
-  background: #0a0b0c;
-  border: 1px solid transparent;
-  color: var(--paper);
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.2s ease;
+.search-page-subtitle {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
 }
 
-.search-input::placeholder {
-  color: #899195;
-}
-
-.search-input:focus {
-  border-color: var(--signal-yellow);
-}
-
-.search-button {
-  padding: 14px 24px;
-  background: var(--signal-yellow);
-  border: 1px solid var(--signal-yellow);
-  color: #101010;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.search-button:hover {
-  background: transparent;
-  color: var(--signal-yellow);
-}
-
-.search-button:disabled {
-  cursor: wait;
-  opacity: .65;
-}
-
-.search-error {
-  margin: 14px 0 0;
-  color: #ff9b9b;
-  font-size: .9rem;
-}
-
-/* 查詢結果卡片與各欄位列。 */
-.result-card {
-  display: grid;
-  gap: 2px;
-  margin-top: 22px;
-  padding: 24px;
-  background: #171a1c;
-  border-left: 3px solid var(--signal-yellow);
-}
-
-.result-card h2 {
-  margin: 0 0 12px;
-  color: var(--paper);
-  font-size: 1.2rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-}
-
-.result-item {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  min-height: 48px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.label {
-  flex: 0 0 96px;
-  color: #aeb4b6;
-  font-size: 0.9rem;
-}
-
-.value {
-  color: var(--paper);
-}
-
-.status-badge {
-  padding: 5px 10px;
-  color: #101010;
-  background: var(--signal-yellow);
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-/* 進度條：背景軌道、動態填滿區與百分比文字。 */
-.progress-wrapper {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: 12px;
-}
-
-.progress-bar-bg {
-  flex: 1;
-  height: 8px;
-  overflow: hidden;
-  background: #454d51;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: var(--signal-yellow);
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  min-width: 40px;
-  color: var(--paper);
-  font-size: 0.85rem;
-  text-align: right;
-}
-
-/* 手機版將搜尋按鈕與結果欄位改為直向排列。 */
-@media (max-width: 600px) {
-  .search-page {
-    width: min(100% - 32px, 620px);
-    min-height: calc(100vh - 210px);
-    padding: 48px 0 64px;
-  }
-
-  .search-bar {
-    flex-direction: column;
-  }
-
-  .search-button {
-    width: 100%;
-  }
-
-  .result-card {
+/* 搜尋控制面板 */
+.search-control-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
     padding: 20px;
-  }
+    margin-bottom: 28px;
+}
 
-  .result-item {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 7px;
-  }
+.search-bar-modern {
+    display: flex;
+    gap: 12px;
+}
 
-  .progress-wrapper {
+.search-input-modern {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #1a202c;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input-modern:focus {
+    border-color: #1a365d;
+    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.12);
+}
+
+.search-input-modern::placeholder {
+    color: #94a3b8;
+}
+
+/* 搜尋主按鈕 (比照 ApplyPage 的 Navy 主色) */
+.btn-search-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    background: #1a365d;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-search-primary:hover:not(:disabled) {
+    background: #2a4365;
+    transform: translateY(-1px);
+}
+
+.btn-search-primary:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* 錯誤提示 */
+.search-error-alert {
+    padding: 12px 18px;
+    background: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-radius: 6px;
+    color: #c53030;
+    font-size: 0.92rem;
+    margin-bottom: 24px;
+}
+
+/* 查詢結果區塊 */
+.search-result-section {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   政府公文表格風格 (完全對齊 ApplyPage.css)
+   ========================================================= */
+.gov-form-table {
     width: 100%;
-  }
+    border-collapse: collapse;
+    border: 1.5px solid #333333;
+    margin-bottom: 24px;
+    background: #ffffff;
+}
+
+.gov-form-table th,
+.gov-form-table td {
+    border: 1px solid #444444;
+    padding: 10px 14px;
+    font-size: 0.98rem;
+    vertical-align: middle;
+}
+
+/* 標題欄：比照 ApplyPage #fbe6db 粉橘底色 */
+.section-header-row {
+    background-color: #fbe6db;
+}
+
+.section-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+/* 欄位標籤 */
+.cell-label {
+    background-color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+    width: 130px;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    color: #333;
+}
+
+.cell-content {
+    color: #222;
+}
+
+.bold-text {
+    font-weight: 600;
+}
+
+.highlight-code {
+    font-family: monospace;
+    font-weight: 700;
+    color: #1a365d;
+    font-size: 1.05rem;
+}
+
+.price-text {
+    color: #2b6cb0;
+    font-weight: 700;
+}
+
+/* 狀態徽章 */
+.status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.status-tag.status-資料審核中 {
+    background: #fefcbf;
+    color: #744210;
+    border: 1px solid #faf089;
+}
+
+.status-tag.status-核銷完成,
+.status-tag.status-已完成撥款,
+.status-tag.status-審核完成 {
+    background: #c6f6d5;
+    color: #22543d;
+    border: 1px solid #9ae6b4;
+}
+
+.status-tag.status-等待補件 {
+    background: #feebc8;
+    color: #7b341e;
+    border: 1px solid #fbd38d;
+}
+
+.status-tag.status-等待撥款 {
+    background: #e9d8fd;
+    color: #44337a;
+    border: 1px solid #d6bcfa;
+}
+
+/* 表格內的進度條 */
+.table-progress-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.table-progress-track {
+    flex: 1;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table-progress-bar {
+    height: 100%;
+    background: #1a365d;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.table-progress-label {
+    min-width: 44px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #1a365d;
+    text-align: right;
+}
+
+/* =========================================================
+   時程步驟 Stepper (5 階段審核進度)
+   ========================================================= */
+.queue-count-highlight {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a365d;
+    margin-right: 2px;
+}
+
+.flow-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 6px;
+    background: #fcfdfd;
+}
+
+.flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 85px;
+    flex: 1;
+}
+
+.step-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    transition: all 0.2s;
+}
+
+.flow-step.done .step-circle {
+    background: #1a365d;
+    color: #ffffff;
+}
+
+.flow-step.current .step-circle {
+    background: #ecc94b;
+    color: #744210;
+    box-shadow: 0 0 0 3px rgba(236, 201, 75, 0.35);
+}
+
+.flow-step.pending .step-circle {
+    background: #edf2f7;
+    color: #a0aec0;
+    border: 1px solid #cbd5e0;
+}
+
+.step-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #2d3748;
+    line-height: 1.3;
+}
+
+.step-desc {
+    font-size: 0.76rem;
+    color: #718096;
+    margin-top: 2px;
+}
+
+.step-line {
+    flex: 1;
+    height: 2px;
+    background: #cbd5e0;
+    margin: 0 6px 22px;
+}
+
+.step-line.active {
+    background: #1a365d;
+}
+
+/* 底部操作欄 */
+.search-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    gap: 16px;
+}
+
+.btn-action-outline {
+    background: #ffffff;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-action-outline:hover {
+    background: #f7fafc;
+    border-color: #a0aec0;
+}
+
+.btn-action-primary {
+    display: inline-flex;
+    align-items: center;
+    background: #1a365d;
+    color: #ffffff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-action-primary:hover {
+    background: #2a4365;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   手機版響應式設計
+   ========================================================= */
+@media (max-width: 768px) {
+    .search-container {
+        padding: 20px 16px;
+        margin: 15px auto 40px;
+    }
+
+    .search-bar-modern {
+        flex-direction: column;
+    }
+
+    .btn-search-primary {
+        width: 100%;
+    }
+
+    .cell-label {
+        width: 96px;
+        font-size: 0.88rem;
+        padding: 8px;
+    }
+
+    .gov-form-table th,
+    .gov-form-table td {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+
+    .flow-stepper {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .step-line {
+        display: none;
+    }
+
+    .flow-step {
+        flex-direction: row;
+        gap: 10px;
+        text-align: left;
+    }
+
+    .search-actions-bar {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-action-outline,
+    .btn-action-primary {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
 }
