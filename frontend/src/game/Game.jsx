@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PixelTypewriter from './PixelTypewriter';
 import PhoneSimulator from './PhoneSimulator';
 import GameNarration from './GameNarration';
+import GameComplete from './GameComplete';
 import './Game.css';
 
 const PROLOGUE = [
@@ -16,6 +17,7 @@ function CybersecurityGame() {
     const [hasStarted, setHasStarted] = useState(false);
     const [narrationStage, setNarrationStage] = useState(null);
     const [guideStep, setGuideStep] = useState(null);
+    const [isGameComplete, setIsGameComplete] = useState(false);
 
     return (
         <main className="cyber-game">
@@ -42,6 +44,8 @@ function CybersecurityGame() {
                         </button>
                     )}
                 </section>
+            ) : isGameComplete ? (
+                <GameComplete />
             ) : (
                 <div className="game-phone-stage">
                     <div className="game-phone-shell">
@@ -66,6 +70,8 @@ function CybersecurityGame() {
                             onComplete={() => {
                                 setNarrationStage(null);
                                 if (narrationStage === 'phone-intro') setGuideStep('line-app');
+                                if (narrationStage === 'heartsync-materials-clue') setNarrationStage('game-complete');
+                                if (narrationStage === 'game-complete') setIsGameComplete(true);
                             }}
                         />
                     </div>

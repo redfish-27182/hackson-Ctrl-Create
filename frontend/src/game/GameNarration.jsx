@@ -32,8 +32,18 @@ export const NARRATION_STAGES = [
     {
         id: 'heartsync-materials-clue',
         label: 'SYSTEM LOG // 04',
-        lines: ['你找到了第三個資訊漏洞：網站以戀愛分析為名蒐集自拍照與語音樣本。這些生物特徵一旦外流，可能被用於深偽造、聲紋冒用與詐騙。接下來，繼續找出它還要求了哪些不必要的權限。'],
+        lines: ['找到線索(3/3)'],
+        lines: ['你找到了第三個資訊漏洞：網站以戀愛分析為名蒐集自拍照與語音樣本。這些生物特徵一旦外流，可能被用於深偽造、聲紋冒用與詐騙。'],
         actionLabel: '繼續',
+    },
+    {
+        id: 'game-complete',
+        label: 'SYSTEM LOG // FINAL',
+        lines: [
+            '全部線索已找到，任務通關成功。',
+            '你識別了三個資安漏洞：要求提供身分證正反面、以郵件圖片誘導點擊，以及蒐集自拍照與語音等生物特徵資料。',
+        ],
+        actionLabel: '查看通關結果',
     },
 ];
 

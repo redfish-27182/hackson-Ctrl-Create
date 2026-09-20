@@ -1,0 +1,17 @@
+.game-complete { position: relative; z-index: 1; display: grid; place-items: center; min-height: calc(100vh - 98px); padding: 40px 24px 72px; overflow: hidden; color: #f8f8f4; }
+.game-complete::before { position: absolute; inset: 0; background: radial-gradient(circle at 50% 15%, rgba(255, 242, 45, .18), transparent 28%), linear-gradient(135deg, rgba(255, 242, 45, .04), transparent 45%); content: ''; }
+.game-complete__glow { position: absolute; width: min(70vw, 660px); aspect-ratio: 1; border: 1px solid rgba(255, 242, 45, .3); border-radius: 50%; box-shadow: 0 0 0 55px rgba(255, 242, 45, .035), 0 0 0 110px rgba(255, 242, 45, .02); animation: game-complete-pulse 3s ease-in-out infinite; }
+.game-complete__card { position: relative; width: min(680px, 100%); padding: clamp(30px, 6vw, 58px); border: 1px solid rgba(255, 242, 45, .68); background: rgba(10, 11, 10, .9); box-shadow: 0 28px 80px rgba(0, 0, 0, .58), inset 0 0 54px rgba(255, 242, 45, .04); text-align: center; }
+.game-complete__badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; color: #111; background: #fff22d; font-size: .74rem; font-weight: 900; letter-spacing: .11em; }
+.game-complete__eyebrow { margin: 28px 0 10px; color: #fff22d; font-size: .75rem; font-weight: 800; letter-spacing: .16em; }
+.game-complete h1 { margin: 0; font-size: clamp(2.4rem, 8vw, 4.8rem); letter-spacing: .12em; }
+.game-complete__summary { max-width: 490px; margin: 18px auto 30px; color: #d8dbdb; line-height: 1.7; }
+.game-complete__findings { display: grid; gap: 10px; text-align: left; }
+.game-complete__findings article { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 15px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(255, 255, 255, .04); }
+.game-complete__findings article > span { display: grid; place-items: center; width: 42px; height: 42px; color: #fff22d; border: 1px solid rgba(255, 242, 45, .5); }
+.game-complete__findings small { color: #fff22d; font-size: .68rem; font-weight: 800; letter-spacing: .1em; }
+.game-complete__findings h2 { margin: 3px 0 5px; font-size: 1rem; }
+.game-complete__findings p { margin: 0; color: #d5d7d7; font-size: .88rem; line-height: 1.5; }
+.game-complete__home { display: inline-block; margin-top: 30px; padding: 12px 20px; color: #111; background: #fff22d; font-weight: 900; text-decoration: none; }
+@keyframes game-complete-pulse { 50% { transform: scale(1.06); opacity: .65; } }
+@media (max-width: 560px) { .game-complete { padding: 24px 16px 48px; } .game-complete__card { padding: 28px 20px; } }
