@@ -86,8 +86,8 @@ const IMAGE_MODULES = import.meta.glob('./LineUserImage/*.{png,jpg,jpeg,webp,gif
 const LINE_IMAGES = Object.fromEntries(Object.entries(IMAGE_MODULES).map(([path, url]) => [path.split('/').pop(), url]));
 
 const IDENTITY_CARD_PHOTOS = [
-    { id: 'front', label: '身分證正面照片', guide: 'id-card-front' },
-    { id: 'back', label: '身分證背面照片', guide: 'id-card-back' },
+    { id: 'front', image: 'ID_card_1.jpg', label: '身分證正面照片', guide: 'id-card-front' },
+    { id: 'back', image: 'ID_card_2.jpg', label: '身分證背面照片', guide: 'id-card-back' },
 ];
 
 function LineAvatar({ image, name }) {
@@ -150,9 +150,7 @@ function LineApp({ onHome, onFirstUserOpened, onHeartSyncOpen, onIdentityCardGui
                                                     type="button"
                                                     onClick={onIdentityCardGuideOpen}
                                                 >
-                                                    <Image size={18} />
-                                                    <span>{photo.label}</span>
-                                                    <small>點擊查看</small>
+                                                    <img src={LINE_IMAGES[photo.image]} alt={photo.label} />
                                                 </button>
                                             ))}
                                         </div>

@@ -43,7 +43,7 @@ const ASSISTIVE_ACTIONS = [
     { id: 'screenshot', name: '截圖', icon: ScanLine },
 ];
 
-function PhoneSimulator({ guideStep = null, onGuideStepChange }) {
+function PhoneSimulator({ guideStep = null, onGuideStepChange, onGuideComplete }) {
     // 手機目前所在畫面與輔助觸控選單的開啟狀態。
     const [currentScreen, setCurrentScreen] = useState('HOME');
     const [isAssistiveOpen, setIsAssistiveOpen] = useState(false);
@@ -102,6 +102,10 @@ function PhoneSimulator({ guideStep = null, onGuideStepChange }) {
                 window.setTimeout(() => onGuideStepChange?.('line-id-card-photos'), 20);
             },
             onHeartSyncOpen: () => setCurrentScreen('HEARTSYNC'),
+            onHeartSyncOpened: () => {
+                onGuideStepChange?.(null);
+                window.setTimeout(() => onGuideStepChange?.('gmail-heartsync-image-bottom'), 20);
+            },
             onCloseHeartSync: () => setCurrentScreen('LINE'),
         };
         if (currentScreen === 'LINE') return <LineApp {...pageProps} />;
@@ -147,7 +151,7 @@ function PhoneSimulator({ guideStep = null, onGuideStepChange }) {
                 <div className="phone-simulator__island" aria-hidden="true" />
                 <div className="phone-simulator__status-bar"><span>9:41</span><span>5G ▰◔</span></div>
                 {renderScreen()}
-                <PhoneGuide step={guideStep} />
+                <PhoneGuide step={guideStep} onComplete={onGuideComplete} />
 
                 {/* 點擊白點後顯示四方向的輔助觸控選單。 */}
                 {isAssistiveOpen && (

@@ -5,9 +5,10 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import page1 from '../../image/page1.gif';
 import page2 from '../../image/page2.gif';
+import page3 from '../../image/page3.gif';
 import './HeroCarousel.css';
 
-const slides = [page1, page2, page1];
+const slides = [page1, page2, page3];
 
 function HeroCarousel() {
     return (

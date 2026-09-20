@@ -38,9 +38,18 @@ const GUIDE_STEPS = {
             },
         ],
     },
+    'gmail-heartsync-image-bottom': {
+        element: '[data-guide="gmail-heartsync-image-bottom"]',
+        title: '查看圖片內容',
+        description: '點擊圖片下方區域，繼續劇情。',
+        side: 'top',
+        showButtons: [],
+        disableActiveInteraction: false,
+        advanceOnClick: true,
+    },
 };
 
-function PhoneGuide({ step }) {
+function PhoneGuide({ step, onComplete }) {
     useEffect(() => {
         const guideStep = GUIDE_STEPS[step];
         if (!guideStep) return undefined;
@@ -55,6 +64,11 @@ function PhoneGuide({ step }) {
             overlayOpacity: 0.62,
             stagePadding: 8,
             disableActiveInteraction: guideStep.disableActiveInteraction ?? false,
+            advanceOnClick: guideStep.advanceOnClick ?? false,
+            onDoneClick: () => {
+                guide.destroy();
+                onComplete?.(step);
+            },
             steps: guideSteps.map((item) => ({
                 element: item.element,
                 popover: {

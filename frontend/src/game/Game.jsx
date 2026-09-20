@@ -48,12 +48,22 @@ function CybersecurityGame() {
                         <PhoneSimulator
                             guideStep={guideStep}
                             onGuideStepChange={setGuideStep}
+                            onGuideComplete={(completedStep) => {
+                                if (completedStep === 'line-id-card-photos') {
+                                    setGuideStep(null);
+                                    setNarrationStage('line-clue');
+                                }
+                                if (completedStep === 'gmail-heartsync-image-bottom') {
+                                    setGuideStep(null);
+                                    setNarrationStage('gmail-clue');
+                                }
+                            }}
                         />
                         <GameNarration
                             stageId={narrationStage}
                             onComplete={() => {
                                 setNarrationStage(null);
-                                setGuideStep('line-app');
+                                if (narrationStage === 'phone-intro') setGuideStep('line-app');
                             }}
                         />
                     </div>

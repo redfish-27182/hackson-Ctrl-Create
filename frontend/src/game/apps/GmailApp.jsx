@@ -13,7 +13,7 @@ const INITIAL_MAILS = [
 const FAKE_IMAGE_MODULES = import.meta.glob('./GmailFakeImage/*.{png,jpg,jpeg,webp,gif}', { eager: true, import: 'default', query: '?url' });
 const FAKE_IMAGES = Object.fromEntries(Object.entries(FAKE_IMAGE_MODULES).map(([path, url]) => [path.split('/').pop(), url]));
 
-function GmailApp({ onHome }) {
+function GmailApp({ onHome, onHeartSyncOpened }) {
     const [mails, setMails] = useState(INITIAL_MAILS);
     const [selectedMailId, setSelectedMailId] = useState(null);
     const selectedMail = useMemo(() => mails.find((mail) => mail.id === selectedMailId), [mails, selectedMailId]);
@@ -24,6 +24,9 @@ function GmailApp({ onHome }) {
             mail.id === mailId ? { ...mail, unread: false } : mail
         )));
         setSelectedMailId(mailId);
+        if (mailId === 'heartsync') {
+            window.setTimeout(() => onHeartSyncOpened?.(), 20);
+        }
     };
 
     if (selectedMail) {
@@ -32,6 +35,7 @@ function GmailApp({ onHome }) {
             <section className="phone-page phone-page--gmail">
                 <div className="gmail-fake-page">
                     {fakePageImage ? <img src={fakePageImage} alt={`${selectedMail.subject} 的假郵件頁面`} /> : <div className="gmail-fake-page__placeholder"><Mail size={54} /><b>等待圖片：{selectedMail.fakeImage}</b></div>}
+                    {selectedMail.id === 'heartsync' && <div className="gmail-fake-page__image-bottom" data-guide="gmail-heartsync-image-bottom" />}
                     {/* 圖片左上角的小區域可回到 Gmail 列表。 */}
                     <button className="gmail-fake-page__back" 
                             type="button" 

@@ -18,12 +18,14 @@ export const NARRATION_STAGES = [
     {
         id: 'line-clue',
         label: 'SYSTEM LOG // 02',
-        lines: ['對話中的關心看似自然，但細節開始出現矛盾。'],
+        lines: ['找到線索(1/3)'],
+        lines: ['照片傳出的瞬間，資料也可能落入陌生人的手中。請仔細檢視這段對話裡的可疑訊號。'],
         actionLabel: '繼續',
     },
     {
         id: 'gmail-clue',
         label: 'SYSTEM LOG // 03',
+        lines: ['找到線索(2/3)'],
         lines: ['一封看似正常的郵件，可能藏著資料遭濫用的證據。'],
         actionLabel: '查看郵件',
     },
