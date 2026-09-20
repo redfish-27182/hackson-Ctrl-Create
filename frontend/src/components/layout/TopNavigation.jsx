@@ -1,3 +1,5 @@
+import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './TopNavigation.css';
 
@@ -12,6 +14,8 @@ const applyItem = '線上案件申報';
 const faqItem = '常見申辦問答 (FAQ)';
 
 function TopNavigation() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     return (
         <header className="site-header">
             <div className="utility-bar">
@@ -30,7 +34,7 @@ function TopNavigation() {
                 </div>
             </div>
 
-            <div className="nav-shell">
+            <div className="nav-shell" data-mobile-menu-open={isMobileMenuOpen}>
                 {/* Logo 區 */}
                 <Link className="brand" to="/" aria-label="數位服務首頁">
                     <span className="brand-mark">
@@ -41,6 +45,16 @@ function TopNavigation() {
                         <small>Digital Service Portal</small>
                     </span>
                 </Link>
+
+                <button
+                    className="mobile-menu-toggle"
+                    type="button"
+                    aria-label={isMobileMenuOpen ? '關閉選單' : '開啟選單'}
+                    aria-expanded={isMobileMenuOpen}
+                    onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+                >
+                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
 
                 {/* 主選單清單 */}
                 <nav className="main-nav" aria-label="主選單">

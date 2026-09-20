@@ -105,6 +105,19 @@
   gap: 10px;
 }
 
+.mobile-menu-toggle {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
 .nav-dropdown {
   position: relative;
 }
@@ -197,6 +210,50 @@
 
   .main-nav {
     display: none;
+  }
+
+  .mobile-menu-toggle {
+    display: grid;
+  }
+
+  .nav-shell[data-mobile-menu-open="true"] .main-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px 20px 20px;
+    background: var(--ink);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 14px 20px rgba(0, 0, 0, 0.28);
+  }
+
+  .nav-shell[data-mobile-menu-open="true"] .nav-dropdown {
+    width: 100%;
+  }
+
+  .nav-shell[data-mobile-menu-open="true"] .nav-trigger {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .nav-shell[data-mobile-menu-open="true"] .dropdown-panel {
+    position: static;
+    display: grid;
+    min-width: 0;
+    margin: 0 0 6px;
+    padding: 0 0 0 14px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    visibility: visible;
   }
 }
 
