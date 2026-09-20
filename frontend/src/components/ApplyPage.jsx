@@ -88,11 +88,11 @@ function ApplyPage() {
                     softwareName: data.software_name || 'ChatGPT Plus',
                     softwareCompany: data.software_company || 'OpenAI, Inc.',
                     origin: data.origin || '美國',
-                    purchaseYear: data.purchase_year || '113',
-                    purchaseMonth: data.purchase_month || '03',
-                    purchaseDay: data.purchase_day || '15',
-                    originalPrice: data.original_price || 'USD 20.00',
-                    twdPrice: data.twdPrice || data.twd_price || '640',
+                    purchaseYear: data.purchase_year || '115',
+                    purchaseMonth: data.purchase_month || '06',
+                    purchaseDay: data.purchase_day || '28',
+                    originalPrice: data.original_price || 'USD 21',
+                    twdPrice: data.twdPrice || data.twd_price || '651',
                     creditCardType: data.credit_card_type || 'self',
                 });
             })
@@ -116,11 +116,11 @@ function ApplyPage() {
                     softwareName: 'ChatGPT Plus',
                     softwareCompany: 'OpenAI, Inc.',
                     origin: '美國',
-                    purchaseYear: '113',
-                    purchaseMonth: '03',
-                    purchaseDay: '15',
-                    originalPrice: 'USD 20.00',
-                    twdPrice: '640',
+                    purchaseYear: '115',
+                    purchaseMonth: '06',
+                    purchaseDay: '28',
+                    originalPrice: 'USD 21',
+                    twdPrice: '651',
                     creditCardType: 'self',
                 });
             })

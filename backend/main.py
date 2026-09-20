@@ -415,7 +415,7 @@ def handle_text_message(event):
         reply_text = (
             "📋【新竹市青年數位工具補助 — 線上申辦】\n\n"
             "已為您開啟個人專屬一鍵申辦通道！\n"
-            "系統將自動帶入您的戶籍與身分資訊。\n\n"
+            "系統將自動帶入您的身分資訊。\n\n"
             f"👉 請點擊以下專屬連結進入申辦表單：\n{apply_url}"
         )
         send_reply(event, reply_text)
@@ -678,20 +678,18 @@ def handle_text_message(event):
 
     web_menu_messages = {
         "FAQ",
-        "FAQ (c+d)",
         "進度查詢",
         "查詢申請進度",
         "一鍵申請",
         "線上案件申報",
         "線上申辦",
-        "一鍵申辦",
         "案件申報",
         "申請",
         "資安遊戲",
     }
 
     if user_message in web_menu_messages:
-        if user_message in ["一鍵申請", "線上案件申報", "線上申辦", "一鍵申辦", "案件申報", "申請"]:
+        if user_message in ["一鍵申請"]:
             line_user_id = getattr(event.source, "user_id", "mock_user")
             apply_url = f"{FRONTEND_URL}/apply?line_user_id={line_user_id}"
             reply_text = (
